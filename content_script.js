@@ -1,28 +1,43 @@
-var censorDOM = function(baseNode) {
-  /* censor the text included in the DOM node */
-  var censorNode = function(node) {
-    var node = $(node);
-    var keywords = ["馬英九", "蔡英文"];
-    keywords.forEach(function(keyword) {
-      if (node.text().indexOf(keyword) != -1) {
-        node.html(node.text().replace(keyword, '<span style="background: hsl(0, 50%, 70%)">' + keyword + '</span>'));
+var censorNewsSite = function(baseNode) {
+  if (window.location.host.toLowerCase().indexOf("news") !== -1) {
+    var censorPage = function() {
+      console.log("censorPage()");
+      if ($(".newshelper-warning").length >= 1) {
+        return;
       }
-    });
-  };
 
-  /* DOM traversal by DFS*/
-  var traverseDOM = function(parentNode) {
-    $(parentNode).children().each(function(idx, node) {
-      if ($(node).children().length < 1) {
-        censorNode(node);
-      }
-      else {
-        traverseDOM(node);
-      }
-    });
-  };
+      var buildWarningMessage = function(description, tags) {
+        return '<p class="newshelper-warning" style="background: hsl(0, 50%, 50%); color: white; font-size: large; text-align: center; width: 100%; padding: 5px 0;">' + 
+          '[警告] 您可能是問題新聞的受害者！' + 
+            '<span class="newshelper-description" style="font-size: small; display: block;">' +
+              description +
+            '</span>' +
+            '<span class="newshelper-tags" style="font-size: small; display: block;>{' + 
+              tags + 
+            '</span>}' + 
+          '</p>';
+      };
+    
+      var titleText = $("title").text(),
+          linkHref = window.location.href;
 
-  traverseDOM(baseNode);
+      /* validate the page title and link */
+      var API_BASE = "http://taichung-chang-946908.middle2.me",
+          API_ENDPOINT = "/api/check_news"
+      var queryParams = {
+        title: titleText,
+        url: linkHref
+      };
+      $.getJSON(API_BASE + API_ENDPOINT, queryParams)
+        .done(function(result) {
+          if ($(".newshelper-warning").length < 1) {
+            console.log("titleText: " + titleText + ", linkHref: " + linkHref);
+            $("body").prepend(buildWarningMessage(result.description, result.tags));
+          }
+        });
+    };
+    censorPage();
+  }
 };
 
 var censorFacebook = function(baseNode) {
@@ -68,7 +83,7 @@ var censorFacebook = function(baseNode) {
           API_ENDPOINT = "/api/check_news"
       var queryParams = {
         title: titleText,
-        link: linkHref
+        url: linkHref
       };
       $.getJSON(API_BASE + API_ENDPOINT, queryParams)
         .done(function(result) {
@@ -123,8 +138,8 @@ var registerObserver = function() {
   };
   var mutationObserver = new MutationObserver(function(mutations) {
     mutations.forEach(function(mutation) {
-      // censorDOM(mutation.target);
       censorFacebook(mutation.target);
+      censorNewsSite(mutation.target);
     });
   });
   mutationObserver.observe(mutationObserverConfig.target, mutationObserverConfig.config);
@@ -133,8 +148,8 @@ var registerObserver = function() {
 var main = function() {
   $(function(){
     /* fire up right after the page loaded*/
-    // censorDOM(document.body);
     censorFacebook(document.body);
+    censorNewsSite(document.body);
   
     /* deal with changed DOMs (i.e. AJAX-loaded content) */
     registerObserver();
