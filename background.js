@@ -6,9 +6,9 @@ function onRequest(request, sender, sendResponse) {
 
     if (request.method == 'add_notification') {
         var notification = window.webkitNotifications.createNotification(
-              request.image,
-              request.title,
-              request.body
+              '' + request.image,
+              '' + request.title,
+              '' + request.body
         );
         notification.show();
     }
