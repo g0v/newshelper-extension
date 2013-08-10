@@ -30,7 +30,7 @@ var censorFacebook = function(baseNode) {
     /* log browsing history into local database for further warning */
     var logBrowsedLink = function(linkHref) {
       if (localStorage['links'] === undefined) {
-        localStroage['links'] = [];
+        localStorage['links'] = [];
       }
 
       localStorage['links'].push(linkHref);
