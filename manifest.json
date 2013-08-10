@@ -10,6 +10,13 @@
     "http://*/",
     "https://*/"
   ],
+
+  "page_action" : {
+      "default_icon" : "page.png",
+      "default_title" : "設定新聞小幫手",
+      "default_popup" : "popup.html"
+  },
+
   "content_scripts" : [
     {
       "matches": [
