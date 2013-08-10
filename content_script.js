@@ -67,7 +67,7 @@ var censorFacebook = function(baseNode) {
     /* my timeline */
     $(baseNode).find(".uiStreamAttachments").each(function(idx, uiStreamAttachment) {
       var uiStreamAttachment = $(uiStreamAttachment)
-      if (!uiStreamAttachment.hasClass("newshelper-censored")) {
+      if (!uiStreamAttachment.hasClass("newshelper-checked")) {
         var titleText = uiStreamAttachment.find(".uiAttachmentTitle").text();
         var linkHref = uiStreamAttachment.find("a").attr("href");
         censorFacebookNode(uiStreamAttachment, titleText, linkHref);
@@ -77,7 +77,7 @@ var censorFacebook = function(baseNode) {
     /* others' timeline, fan page */
     $(baseNode).find(".shareUnit").each(function(idx, shareUnit) {
       var shareUnit = $(shareUnit);
-      if (!shareUnit.hasClass("newshelper-censored")) {
+      if (!shareUnit.hasClass("newshelper-checked")) {
         var titleText = shareUnit.find(".fwb").text();
         var linkHref = shareUnit.find("a").attr("href");
         censorFacebookNode(shareUnit, titleText, linkHref)
@@ -87,10 +87,10 @@ var censorFacebook = function(baseNode) {
     /* post page (single post) */
     $(baseNode).find("._6kv").each(function(idx, userContent) {
       var userContent = $(userContent);
-      if (!userContent.hasClass("newshelper-censored")) {
+      if (!userContent.hasClass("newshelper-checked")) {
         var titleText = userContent.find(".mbs").text();
         var linkHref = userContent.find("a").attr("href");
-        censorFaebookNode(userContent, titleText, linkHref);
+        censorFacebookNode(userContent, titleText, linkHref);
       };
     });
   }
