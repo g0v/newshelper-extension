@@ -11,6 +11,8 @@
     "https://*/"
   ],
 
+  "background": { "scripts": ["background.js"] },
+
   "page_action" : {
       "default_icon" : "page.png",
       "default_title" : "設定新聞小幫手",
