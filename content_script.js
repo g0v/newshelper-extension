@@ -1,7 +1,7 @@
 var censorNewsSite = function(baseNode) {
-  if (window.location.host.toLowerCase().indexOf("news") !== -1) {
+  if (window.location.href.toLowerCase().indexOf("news") !== -1) {
+    console.log("censorPage()");
     var censorPage = function() {
-      console.log("censorPage()");
       if ($(".newshelper-warning").length >= 1) {
         return;
       }

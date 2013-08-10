@@ -7,8 +7,8 @@
 
   "permissions": [
     "notifications",
-    "http://*/",
-    "https://*/"
+    "http://*/*",
+    "https://*/*"
   ],
 
   "background": { "scripts": ["background.js"] },
