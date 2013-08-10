@@ -27,6 +27,15 @@ var censorDOM = function(baseNode) {
 
 var censorFacebook = function(baseNode) {
   if (window.location.host.indexOf("www.facebook.com") !== -1) {
+    /* log browsing history into local database for further warning */
+    var logBrowsedLink = function(linkHref) {
+      if (localStorage['links'] === undefined) {
+        localStroage['links'] = [];
+      }
+
+      localStorage['links'].push(linkHref);
+    };
+
     /* add warning message to a Facebook post if necessary */
     var censorFacebookNode = function(containerNode, titleText, linkHref) {
       var containerNode = $(containerNode);
@@ -34,7 +43,12 @@ var censorFacebook = function(baseNode) {
       if (containerNode.hasClass(className)) {
         return;
       }
-      containerNode.addClass(className);
+      else {
+        containerNode.addClass(className);
+      }
+
+      /* log the link first */
+      logBrowsedLink(linkHref);
 
       var buildWarningMessage = function(description, tags) {
         return '<p class="newshelper-warning" style="background: hsl(0, 50%, 50%); color: white; font-size: large; text-align: center">' + 
