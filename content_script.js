@@ -29,11 +29,12 @@ var censorFacebook = function(baseNode) {
   if (window.location.host.indexOf("www.facebook.com") !== -1) {
     /* log browsing history into local database for further warning */
     var logBrowsedLink = function(linkHref) {
-      if (localStorage['links'] === undefined) {
-        localStorage['links'] = [];
-      }
-
-      localStorage['links'].push(linkHref);
+      list = localStorage['links'] ? JSON.parse(localStorage['links']) : [];
+      list.push({
+        time: (new Date()).getTime(),
+        link: linkHref
+      });
+      localStorage['links'] = JSON.stringify(list);
     };
 
     /* add warning message to a Facebook post if necessary */
