@@ -94,6 +94,18 @@ var log_browsed_link = function(link, title) {
     };
 };
 
+var buildWarningMessage = function(description, tags) {
+    return '<p class="newshelper-warning" style="background: hsl(0, 50%, 50%); color: white; font-size: large; text-align: center">' +
+	'[警告] 您可能是問題新聞的受害者！' +
+	'<span class="newshelper-description" style="font-size: small; display: block;">' +
+	description +
+	'</span>' +
+	'<span class="newshelper-tags" style="font-size: small; display: block;>{' +
+	tags +
+	'</span>}' +
+	'</p>';
+};
+
 var censorFacebook = function(baseNode) {
   if (window.location.host.indexOf("www.facebook.com") !== -1) {
     /* log browsing history into local database for further warning */
@@ -123,18 +135,6 @@ var censorFacebook = function(baseNode) {
 
       /* log the link first */
       logBrowsedLink(linkHref);
-
-      var buildWarningMessage = function(description, tags) {
-        return '<p class="newshelper-warning" style="background: hsl(0, 50%, 50%); color: white; font-size: large; text-align: center">' + 
-          '[警告] 您可能是問題新聞的受害者！' + 
-            '<span class="newshelper-description" style="font-size: small; display: block;">' +
-              description +
-            '</span>' +
-            '<span class="newshelper-tags" style="font-size: small; display: block;>{' + 
-              tags + 
-            '</span>}' + 
-          '</p>';
-      };
 
       /* validate with backend APIs */
       var API_BASE = "http://taichung-chang-946908.middle2.me",
