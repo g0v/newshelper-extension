@@ -284,7 +284,9 @@ var main = function() {
   $(function(){
     /* fire up right after the page loaded*/
     censorFacebook(document.body);
-    censorNewsSite(document.body);
+    //censorNewsSite(document.body);
+
+    chrome.extension.sendRequest({method: 'page'}, function(response){});
     sync_report_data();
   
     /* deal with changed DOMs (i.e. AJAX-loaded content) */
