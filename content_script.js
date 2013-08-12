@@ -116,17 +116,23 @@ var check_recent_seen = function(report){
 var sync_report_data = function(){
     get_newshelper_db(function(opened_db){
 	chrome.storage.local.get({last_sync_at: 0}, function(ret){
-	    $.get('http://kaohiung-wei-233594.middle2.me/index/data?time=' + parseInt(ret.last_sync_at), function(ret){
+	    $.get('http://newshelper.g0v.ronny.tw/index/data?time=' + parseInt(ret.last_sync_at), function(ret){
 		    var transaction = opened_db.transaction("report", 'readwrite');
 		    var objectStore = transaction.objectStore("report");
-		    for (var i = 0; i < ret.data.length; i ++) {
-			// TODO: 如果 deleted_at > 0, 要把他從 local db 刪掉
-			objectStore.put(ret.data[i]);
+		    if (ret.data) {
+			for (var i = 0; i < ret.data.length; i ++) {
+			    // TODO: 如果 deleted_at > 0, 要把他從 local db 刪掉
+			    objectStore.put(ret.data[i]);
 
-			// 檢查最近天看過的內容是否有被加進去的
-			check_recent_seen(ret.data[i]);
+			    // 檢查最近天看過的內容是否有被加進去的
+			    check_recent_seen(ret.data[i]);
+			}
 		    }
+
 		    chrome.storage.local.set({last_sync_at: ret.time});
+
+		    // 每 5 分鐘去檢查一次是否有更新
+		    setTimeout(sync_report_data, 300000);
 	    }, 'json');
 	});
     });
