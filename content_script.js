@@ -76,6 +76,22 @@ var log_browsed_link = function(link, title) {
 	link: link,
 	last_seen_at: Math.floor((new Date()).getTime() /1000)
     });
+
+    // link 重覆
+    request.onerror = function(){
+	var transaction = opened_db.transaction("read_news", 'readwrite');
+	var objectStore = transaction.objectStore("read_news");
+	var index = objectStore.index('link');
+	var get_request = index.get(link);
+	get_request.onsuccess = function(){
+	    // update last_seen_at
+	    var put_request = objectStore.put({
+		id: get_request.result.id,
+		title: title,
+		last_seen_at: Math.floor((new Date()).getTime() /1000)
+	    });
+	};
+    };
 };
 
 var censorFacebook = function(baseNode) {
