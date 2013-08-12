@@ -8,8 +8,9 @@
   "permissions": [
     "notifications",
     "storage",
-    "http://*/*",
-    "https://*/*"
+    "http://newshelper.g0v.ronny.tw/*",
+    "https://www.facebook.com/*",
+    "http://www.facebook.com/*"
   ],
 
   "background": { "scripts": ["background.js"] },
@@ -23,8 +24,8 @@
   "content_scripts" : [
     {
       "matches": [
-        "http://*/*",
-        "https://*/*"
+        "http://www.facebook.com/*",
+        "https://www.facebook.com/*"
       ],
       "js": [
         "jquery-2.0.3.min.js",
