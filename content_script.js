@@ -78,17 +78,56 @@ var get_newshelper_db = function(cb){
 var indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB || window.msIndexedDB;
 var opened_db = null;
 
+var get_time_diff = function(time){
+    var delta = Math.floor((new Date()).getTime() / 1000) - time;
+    if (delta < 60) {
+	return delta + " 秒前";
+    } else if (delta < 60 * 60) {
+	return Math.floor(delta / 60) + " 分鐘前";
+    } else if (delta < 60 * 60 * 24) {
+	return Math.floor(delta / 60 / 60) + " 小時前";
+    } else {
+	return Math.floor(delta / 60 / 60 / 24) + " 天前";
+    }
+};
+
+var check_recent_seen = function(report){
+    get_newshelper_db(function(opened_db){
+	var transaction = opened_db.transaction("read_news", 'readonly');
+	var objectStore = transaction.objectStore("read_news");
+	var index = objectStore.index('link');
+	var get_request = index.get(report.news_link);
+	get_request.onsuccess = function() {
+	    if (!get_request.result) {
+		return;
+	    }
+	    console.log(get_request);
+	    chrome.extension.sendRequest({
+		method: 'add_notification',
+		title: '新聞小幫手提醒您',
+		body: '您於' + get_time_diff(get_request.result.last_seen_at) + ' 看的新聞「' + get_request.result.title + '」 被人回報有錯誤：' + report.report_title,
+		link: report.report_link
+
+	    }, function(response){});
+	};
+    });
+};
+
 // 跟遠端 API server 同步回報資料
 var sync_report_data = function(){
     get_newshelper_db(function(opened_db){
 	// TODO: 要改成只抓有更新的部份
 	$.get('http://kaohiung-wei-233594.middle2.me/index/data', function(ret){
-	        // TODO: 要針對這些資料檢查最近三天看過的是否有符合的, 並用跳出警告的方式
 		var transaction = opened_db.transaction("report", 'readwrite');
 		var objectStore = transaction.objectStore("report");
 		for (var i = 0; i < ret.data.length; i ++) {
 		    // TODO: 如果 deleted_at > 0, 要把他從 local db 刪掉
 		    objectStore.put(ret.data[i]);
+
+		    // 檢查最近天看過的內容是否有被加進去的
+		    check_recent_seen(ret.data[i]);
+
+
 		}
 	}, 'json');
     });
