@@ -46,7 +46,7 @@ var get_newshelper_db = function(cb){
 	return;
     }
 
-    var request = indexedDB.open('newshelper', '4');
+    var request = indexedDB.open('newshelper', '5');
     request.onsuccess = function(event){
 	opened_db = request.result;
 	cb(opened_db);
@@ -58,16 +58,39 @@ var get_newshelper_db = function(cb){
     };
 
     request.onupgradeneeded = function(event){
-	event.currentTarget.result.deleteObjectStore('read_news');
+	try {
+	    event.currentTarget.result.deleteObjectStore('read_news');
+	} catch (e) {}
 	var objectStore = event.currentTarget.result.createObjectStore("read_news", { keyPath: "id", autoIncrement: true });
 	objectStore.createIndex("title", "title", { unique: false });
 	objectStore.createIndex("link", "link", { unique: true });
 	objectStore.createIndex("last_seen_at", "last_seen_at", { unique: false });
+
+	try {
+	    event.currentTarget.result.deleteObjectStore('report');
+	} catch (e) {}
+	var objectStore = event.currentTarget.result.createObjectStore("report", { keyPath: "id" });
+	objectStore.createIndex("news_title", "news_title", { unique: false });
+	objectStore.createIndex("news_link", "news_link", { unique: false });
     };
 };
 
 var indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB || window.msIndexedDB;
 var opened_db = null;
+
+// 跟遠端 API server 同步回報資料
+var sync_report_data = function(){
+    get_newshelper_db(function(opened_db){
+	// TODO: 要改成只抓有更新的部份
+	$.get('http://kaohiung-wei-233594.middle2.me/index/data', function(ret){
+		var transaction = opened_db.transaction("report", 'readwrite');
+		var objectStore = transaction.objectStore("report");
+		for (var i = 0; i < ret.data.length; i ++) {
+		    objectStore.put(ret.data[i]);
+		}
+	}, 'json');
+    });
+};
 
 var log_browsed_link = function(link, title) {
     if (!link) {
@@ -215,6 +238,7 @@ var main = function() {
     /* fire up right after the page loaded*/
     censorFacebook(document.body);
     censorNewsSite(document.body);
+    sync_report_data();
   
     /* deal with changed DOMs (i.e. AJAX-loaded content) */
     registerObserver();
