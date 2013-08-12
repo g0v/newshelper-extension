@@ -83,9 +83,11 @@ var sync_report_data = function(){
     get_newshelper_db(function(opened_db){
 	// TODO: 要改成只抓有更新的部份
 	$.get('http://kaohiung-wei-233594.middle2.me/index/data', function(ret){
+	        // TODO: 要針對這些資料檢查最近三天看過的是否有符合的, 並用跳出警告的方式
 		var transaction = opened_db.transaction("report", 'readwrite');
 		var objectStore = transaction.objectStore("report");
 		for (var i = 0; i < ret.data.length; i ++) {
+		    // TODO: 如果 deleted_at > 0, 要把他從 local db 刪掉
 		    objectStore.put(ret.data[i]);
 		}
 	}, 'json');
