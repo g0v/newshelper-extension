@@ -40,6 +40,32 @@ var censorNewsSite = function(baseNode) {
   }
 };
 
+var get_newshelper_db = function(cb){
+    if (null !== opened_db) {
+	cb(opened_db);
+	return;
+    }
+
+    var request = indexedDB.open('newshelper', '4');
+    request.onsuccess = function(event){
+	opened_db = request.result;
+	cb(opened_db);
+	return;
+    };
+
+    request.onerror = function(event){
+	console.log("IndexedDB error: " + event.target.errorCode);
+    };
+
+    request.onupgradeneeded = function(event){
+	event.currentTarget.result.deleteObjectStore('read_news');
+	var objectStore = event.currentTarget.result.createObjectStore("read_news", { keyPath: "id", autoIncrement: true });
+	objectStore.createIndex("title", "title", { unique: false });
+	objectStore.createIndex("link", "link", { unique: true });
+	objectStore.createIndex("last_seen_at", "last_seen_at", { unique: false });
+    };
+};
+
 var indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB || window.msIndexedDB;
 var opened_db = null;
 
@@ -48,50 +74,31 @@ var log_browsed_link = function(link, title) {
 	return;
     }
 
-    if (null === opened_db) {
-	var request = indexedDB.open('newshelper', '4');
-	request.onsuccess = function(event){
-	    opened_db = request.result;
-	    log_browsed_link(link, title);
-	};
-
-	request.onerror = function (event) {
-	    console.log("IndexedDB error: " + event.target.errorCode);
-	};
-
-	request.onupgradeneeded = function (event) {
-	    event.currentTarget.result.deleteObjectStore('read_news');
-	    var objectStore = event.currentTarget.result.createObjectStore("read_news", { keyPath: "id", autoIncrement: true });
-	    objectStore.createIndex("title", "title", { unique: false });
-	    objectStore.createIndex("link", "link", { unique: true });
-	    objectStore.createIndex("last_seen_at", "last_seen_at", { unique: false });
-	};
-	return;
-    }
-
-    var transaction = opened_db.transaction("read_news", 'readwrite');
-    var objectStore = transaction.objectStore("read_news");
-    var request = objectStore.add({
-	title: title,
-	link: link,
-	last_seen_at: Math.floor((new Date()).getTime() /1000)
-    });
-
-    // link 重覆
-    request.onerror = function(){
+    get_newshelper_db(function(opened_db){
 	var transaction = opened_db.transaction("read_news", 'readwrite');
 	var objectStore = transaction.objectStore("read_news");
-	var index = objectStore.index('link');
-	var get_request = index.get(link);
-	get_request.onsuccess = function(){
-	    // update last_seen_at
-	    var put_request = objectStore.put({
-		id: get_request.result.id,
-		title: title,
-		last_seen_at: Math.floor((new Date()).getTime() /1000)
-	    });
+	var request = objectStore.add({
+	    title: title,
+	    link: link,
+	    last_seen_at: Math.floor((new Date()).getTime() /1000)
+	});
+
+	// link 重覆
+	request.onerror = function(){
+	    var transaction = opened_db.transaction("read_news", 'readwrite');
+	    var objectStore = transaction.objectStore("read_news");
+	    var index = objectStore.index('link');
+	    var get_request = index.get(link);
+	    get_request.onsuccess = function(){
+		// update last_seen_at
+		var put_request = objectStore.put({
+		    id: get_request.result.id,
+		    title: title,
+		    last_seen_at: Math.floor((new Date()).getTime() /1000)
+		});
+	    };
 	};
-    };
+    });
 };
 
 var buildWarningMessage = function(description, tags) {
