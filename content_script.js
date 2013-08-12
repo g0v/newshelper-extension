@@ -139,15 +139,6 @@ var buildWarningMessage = function(description, tags) {
 var censorFacebook = function(baseNode) {
   if (window.location.host.indexOf("www.facebook.com") !== -1) {
     /* log browsing history into local database for further warning */
-    var logBrowsedLink = function(linkHref) {
-      list = localStorage['links'] ? JSON.parse(localStorage['links']) : [];
-      list.push({
-        time: (new Date()).getTime(),
-        link: linkHref
-      });
-      localStorage['links'] = JSON.stringify(list);
-    };
-
     /* add warning message to a Facebook post if necessary */
     var censorFacebookNode = function(containerNode, titleText, linkHref) {
 	var matches = ('' + linkHref).match('^http://www\.facebook\.com/l\.php\\?u=([^&]*)');
@@ -164,7 +155,7 @@ var censorFacebook = function(baseNode) {
       }
 
       /* log the link first */
-      logBrowsedLink(linkHref);
+      log_browsed_link(linkHref, titleText);
 
       /* validate with backend APIs */
       var API_BASE = "http://taichung-chang-946908.middle2.me",
