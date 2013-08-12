@@ -10,6 +10,9 @@ function onRequest(request, sender, sendResponse) {
               '' + request.title,
               '' + request.body
         );
+	notification.onclick = function(){
+	    window.open(request.link);
+	};
         notification.show();
     }
 
