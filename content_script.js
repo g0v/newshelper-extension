@@ -101,7 +101,6 @@ var check_recent_seen = function(report){
 	    if (!get_request.result) {
 		return;
 	    }
-	    console.log(get_request);
 	    chrome.extension.sendRequest({
 		method: 'add_notification',
 		title: '新聞小幫手提醒您',
@@ -116,20 +115,20 @@ var check_recent_seen = function(report){
 // 跟遠端 API server 同步回報資料
 var sync_report_data = function(){
     get_newshelper_db(function(opened_db){
-	// TODO: 要改成只抓有更新的部份
-	$.get('http://kaohiung-wei-233594.middle2.me/index/data', function(ret){
-		var transaction = opened_db.transaction("report", 'readwrite');
-		var objectStore = transaction.objectStore("report");
-		for (var i = 0; i < ret.data.length; i ++) {
-		    // TODO: 如果 deleted_at > 0, 要把他從 local db 刪掉
-		    objectStore.put(ret.data[i]);
+	chrome.storage.local.get({last_sync_at: 0}, function(ret){
+	    $.get('http://kaohiung-wei-233594.middle2.me/index/data?time=' + parseInt(ret.last_sync_at), function(ret){
+		    var transaction = opened_db.transaction("report", 'readwrite');
+		    var objectStore = transaction.objectStore("report");
+		    for (var i = 0; i < ret.data.length; i ++) {
+			// TODO: 如果 deleted_at > 0, 要把他從 local db 刪掉
+			objectStore.put(ret.data[i]);
 
-		    // 檢查最近天看過的內容是否有被加進去的
-		    check_recent_seen(ret.data[i]);
-
-
-		}
-	}, 'json');
+			// 檢查最近天看過的內容是否有被加進去的
+			check_recent_seen(ret.data[i]);
+		    }
+		    chrome.storage.local.set({last_sync_at: ret.time});
+	    }, 'json');
+	});
     });
 };
 
