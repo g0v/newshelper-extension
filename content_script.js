@@ -40,6 +40,44 @@ var censorNewsSite = function(baseNode) {
   }
 };
 
+var indexedDB = window.indexedDB || window.webkitIndexedDB || window.mozIndexedDB || window.msIndexedDB;
+var opened_db = null;
+
+var log_browsed_link = function(link, title) {
+    if (!link) {
+	return;
+    }
+
+    if (null === opened_db) {
+	var request = indexedDB.open('newshelper', '4');
+	request.onsuccess = function(event){
+	    opened_db = request.result;
+	    log_browsed_link(link, title);
+	};
+
+	request.onerror = function (event) {
+	    console.log("IndexedDB error: " + event.target.errorCode);
+	};
+
+	request.onupgradeneeded = function (event) {
+	    event.currentTarget.result.deleteObjectStore('read_news');
+	    var objectStore = event.currentTarget.result.createObjectStore("read_news", { keyPath: "id", autoIncrement: true });
+	    objectStore.createIndex("title", "title", { unique: false });
+	    objectStore.createIndex("link", "link", { unique: true });
+	    objectStore.createIndex("last_seen_at", "last_seen_at", { unique: false });
+	};
+	return;
+    }
+
+    var transaction = opened_db.transaction("read_news", 'readwrite');
+    var objectStore = transaction.objectStore("read_news");
+    var request = objectStore.add({
+	title: title,
+	link: link,
+	last_seen_at: Math.floor((new Date()).getTime() /1000)
+    });
+};
+
 var censorFacebook = function(baseNode) {
   if (window.location.host.indexOf("www.facebook.com") !== -1) {
     /* log browsing history into local database for further warning */
