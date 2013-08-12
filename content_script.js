@@ -124,15 +124,31 @@ var log_browsed_link = function(link, title) {
     });
 };
 
-var buildWarningMessage = function(description, tags) {
+// 從 db 中判斷 title, url 是否是錯誤新聞，是的話執行 cb 並傳入資訊
+var check_report = function(title, url, cb){
+    if (!url) {
+	return;
+    }
+    get_newshelper_db(function(opened_db){
+	var transaction = opened_db.transaction("report", 'readonly');
+	var objectStore = transaction.objectStore("report");
+	var index = objectStore.index('news_link');
+
+	var get_request = index.get(url);
+	get_request.onsuccess = function(){
+	    if (get_request.result) {
+		cb(get_request.result);
+	    }
+	};
+    });
+};
+
+var buildWarningMessage = function(options){
     return '<p class="newshelper-warning" style="background: hsl(0, 50%, 50%); color: white; font-size: large; text-align: center">' +
 	'[警告] 您可能是問題新聞的受害者！' +
 	'<span class="newshelper-description" style="font-size: small; display: block;">' +
-	description +
+	$('<span></span>').append($('<a></a>').attr({href: options.link, target: '_blank'}).text(options.title)).html() +
 	'</span>' +
-	'<span class="newshelper-tags" style="font-size: small; display: block;>{' +
-	tags +
-	'</span>}' +
 	'</p>';
 };
 
@@ -157,19 +173,13 @@ var censorFacebook = function(baseNode) {
       /* log the link first */
       log_browsed_link(linkHref, titleText);
 
-      /* validate with backend APIs */
-      var API_BASE = "http://taichung-chang-946908.middle2.me",
-          API_ENDPOINT = "/api/check_news"
-      var queryParams = {
-        title: titleText,
-        url: linkHref
-      };
-      $.getJSON(API_BASE + API_ENDPOINT, queryParams)
-        .done(function(result) {
-          console.log("titleText: " + titleText + ", linkHref: " + linkHref);
-          containerNode.addClass(className);
-          containerNode.append(buildWarningMessage(result.description, result.tags))
-        });
+      check_report(titleText, linkHref, function(report){
+	  containerNode.addClass(className);
+	  containerNode.append(buildWarningMessage({
+	      title: report.report_title,
+	     link: report.report_link
+	  }));
+      });
     };
 
 
