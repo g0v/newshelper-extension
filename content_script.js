@@ -54,6 +54,10 @@ var censorFacebook = function(baseNode) {
 
     /* add warning message to a Facebook post if necessary */
     var censorFacebookNode = function(containerNode, titleText, linkHref) {
+	var matches = ('' + linkHref).match('^http://www\.facebook\.com/l\.php\\?u=([^&]*)');
+	if (matches) {
+	    linkHref = decodeURIComponent(matches[1]);
+	}
       var containerNode = $(containerNode);
       var className = "newshelper-checked";
       if (containerNode.hasClass(className)) {
