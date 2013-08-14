@@ -46,7 +46,7 @@ var get_newshelper_db = function(cb){
 	return;
     }
 
-    var request = indexedDB.open('newshelper', '5');
+    var request = indexedDB.open('newshelper', '6');
     request.onsuccess = function(event){
 	opened_db = request.result;
 	cb(opened_db);
@@ -72,6 +72,7 @@ var get_newshelper_db = function(cb){
 	var objectStore = event.currentTarget.result.createObjectStore("report", { keyPath: "id" });
 	objectStore.createIndex("news_title", "news_title", { unique: false });
 	objectStore.createIndex("news_link", "news_link", { unique: false });
+	objectStore.createIndex("updated_at", "updated_at", { unique: false });
     };
 };
 
@@ -101,6 +102,7 @@ var check_recent_seen = function(report){
 	    if (!get_request.result) {
 		return;
 	    }
+	    console.log(get_request.result.title);
 	    chrome.extension.sendRequest({
 		method: 'add_notification',
 		title: '新聞小幫手提醒您',
@@ -112,11 +114,27 @@ var check_recent_seen = function(report){
     });
 };
 
+var get_recent_report = function(cb){
+    get_newshelper_db(function(opened_db){
+	var transaction = opened_db.transaction('report', 'readonly');
+	var objectStore = transaction.objectStore('report');
+	var index = objectStore.index("updated_at");
+	var request = index.openCursor(null, 'prev');
+	request.onsuccess = function(){
+	    if (request.result) {
+		cb(request.result.value);
+		return;
+	    }
+	    cb(null);
+	}
+    });
+};
+
 // 跟遠端 API server 同步回報資料
 var sync_report_data = function(){
     get_newshelper_db(function(opened_db){
-	chrome.storage.local.get({last_sync_at: 0}, function(ret){
-	    $.get('http://newshelper.g0v.ronny.tw/index/data?time=' + parseInt(ret.last_sync_at), function(ret){
+	get_recent_report(function(report){
+	    $.get('http://newshelper.g0v.ronny.tw/index/data?time=' + (report ? parseInt(report.updated_at) : 0), function(ret){
 		    var transaction = opened_db.transaction("report", 'readwrite');
 		    var objectStore = transaction.objectStore("report");
 		    if (ret.data) {
@@ -128,8 +146,6 @@ var sync_report_data = function(){
 			    check_recent_seen(ret.data[i]);
 			}
 		    }
-
-		    chrome.storage.local.set({last_sync_at: ret.time});
 
 		    // 每 5 分鐘去檢查一次是否有更新
 		    setTimeout(sync_report_data, 300000);

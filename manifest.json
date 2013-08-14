@@ -7,7 +7,6 @@
 
   "permissions": [
     "notifications",
-    "storage",
     "http://newshelper.g0v.ronny.tw/*",
     "https://www.facebook.com/*",
     "http://www.facebook.com/*"
