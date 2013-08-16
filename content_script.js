@@ -206,12 +206,13 @@ var check_report = function(title, url, cb){
 };
 
 var buildWarningMessage = function(options){
-    return '<p class="newshelper-warning" style="background: hsl(0, 50%, 50%); color: white; font-size: large; text-align: center">' +
-	'[警告] 您可能是問題新聞的受害者！' +
-	'<span class="newshelper-description" style="font-size: small; display: block;">' +
+    return '<div class="newshelper-warning-facebook">' +
+    '<div class="arrow-up"></div>' +
+	'注意！您可能是<b>問題新聞</b>的受害者' +
+	'<span class="newshelper-description">' +
 	$('<span></span>').append($('<a></a>').attr({href: options.link, target: '_blank'}).text(options.title)).html() +
 	'</span>' +
-	'</p>';
+	'</div>';
 };
 
 var censorFacebook = function(baseNode) {

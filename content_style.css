@@ -1,0 +1,35 @@
+.newshelper-warning-facebook {
+	 background: hsl(50, 100%, 70%);
+   color: hsl(0, 0%, 20%);
+   font-size: medium;
+   text-align: center;
+   margin: 20px 0 10px 0;
+   padding: 0 0 10px 0;
+   -webkit-border-radius: 5px;
+      -moz-border-radius: 5px;
+           border-radius: 5px;
+}
+ 
+.newshelper-description {
+  display: block;
+  font-size: small;
+  margin-top: 5px;
+}
+
+.newshelper-description a {
+  color: hsl(0, 100%, 50%);
+  font-weight: bold;
+  padding-right: 20px;
+  background: transparent url(data:image/gif;base64,R0lGODlhEQDcAKIAAP////8AAGYAmQAzZv///wAAAAAAAAAAACH5BAUUAAQALAAAAAARANwAAAPmSLrc/m7IOeEAON/x9gQXGGVa1XgSyRGSEpLa0qIUSH1w7HL0t7asnI7RS62IQsxRdrtBntCodEqtWq/YrHbL7Xq/4LB4TC6bz+i0es1uu9/wuHxOr9vv+Lx+zxcL/oCAEAI5hAIPhoAAhIsOjCSBjouKGYcEfwqPhQuYiYGen0mNmYegipaYl6KWDKZ/o62rjp+ffba3uLm6u7y9vr/AwcLDxMXGx8jJynIBzc7OEAE50gEP1M4A0tkO2iTP3NnYGdUEzQrd0wvm18/s7aLk5dXu2OTm5fDg7c3bDegw8dTt+7ZsSgIAOw==) no-repeat 100% -200px;
+}
+
+.arrow-up {
+  width: 0; 
+  height: 0; 
+  border-left: 10px solid transparent;
+  border-right: 10px solid transparent; 
+  border-bottom: 10px solid hsl(50, 100%, 70%);
+  position: relative;
+  top: -10px;
+  margin: 0 auto;
+}

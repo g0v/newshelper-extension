@@ -30,6 +30,9 @@
         "jquery-2.0.3.min.js",
         "content_script.js"
       ],
+      "css": [
+        "content_style.css"
+      ],
       "run_at" : "document_idle",
       "all_frames" : true
     }
