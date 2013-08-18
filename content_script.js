@@ -61,6 +61,11 @@ var check_recent_seen = function(report){
       if (!get_request.result) {
         return;
       };
+
+      // 如果已經被刪除了就跳過
+      if (parseInt(get_request.result.deleted_at, 10)) {
+        return;
+      }
       chrome.extension.sendRequest({
         method: 'add_notification',
         title: '新聞小幫手提醒您',
@@ -98,7 +103,6 @@ var sync_report_data = function(){
         var objectStore = transaction.objectStore("report");
         if (ret.data) {
           for (var i = 0; i < ret.data.length; i ++) {
-            // TODO: 如果 deleted_at > 0, 要把他從 local db 刪掉
             objectStore.put(ret.data[i]);
 
             // 檢查最近天看過的內容是否有被加進去的
@@ -159,7 +163,8 @@ var check_report = function(title, url, cb){
 
     var get_request = index.get(url);
     get_request.onsuccess = function(){
-      if (get_request.result) {
+      // 如果有找到結果，並且沒有被刪除
+      if (get_request.result && !parseInt(get_request.reqsult.deleted_at, 10)) {
         cb(get_request.result);
       }
     };
