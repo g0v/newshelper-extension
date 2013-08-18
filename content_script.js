@@ -61,7 +61,6 @@ var check_recent_seen = function(report){
       if (!get_request.result) {
         return;
       };
-      console.log(get_request.result.title);
       chrome.extension.sendRequest({
         method: 'add_notification',
         title: '新聞小幫手提醒您',
