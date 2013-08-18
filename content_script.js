@@ -7,7 +7,7 @@ var censorNewsSite = function(baseNode) {
       }
 
       var buildWarningMessage = function(description, tags) {
-        return '<p class="newshelper-warning" style="background: hsl(0, 50%, 50%); color: white; font-size: large; text-align: center; width: 100%; padding: 5px 0;">' + 
+        return '<p class="newshelper-warning">' +
           '[警告] 您可能是問題新聞的受害者！' + 
             '<span class="newshelper-description" style="font-size: small; display: block;">' +
               description +
