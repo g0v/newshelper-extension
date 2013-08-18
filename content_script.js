@@ -7,17 +7,17 @@ var censorNewsSite = function(baseNode) {
       }
 
       var buildWarningMessage = function(description, tags) {
-        return '<p class="newshelper-warning" style="background: hsl(0, 50%, 50%); color: white; font-size: large; text-align: center; width: 100%; padding: 5px 0;">' + 
-          '[警告] 您可能是問題新聞的受害者！' + 
+        return '<p class="newshelper-warning">' +
+          '[警告] 您可能是問題新聞的受害者！' +
             '<span class="newshelper-description" style="font-size: small; display: block;">' +
               description +
             '</span>' +
-            '<span class="newshelper-tags" style="font-size: small; display: block;>{' + 
-              tags + 
-            '</span>}' + 
+            '<span class="newshelper-tags" style="font-size: small; display: block;>{' +
+              tags +
+            '</span>}' +
           '</p>';
       };
-    
+
       var titleText = $("title").text(),
           linkHref = window.location.href;
 
@@ -305,7 +305,7 @@ var main = function() {
 
     chrome.extension.sendRequest({method: 'page'}, function(response){});
     sync_report_data();
-  
+
     /* deal with changed DOMs (i.e. AJAX-loaded content) */
     registerObserver();
   });
