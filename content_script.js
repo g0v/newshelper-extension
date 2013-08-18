@@ -1,45 +1,3 @@
-var censorNewsSite = function(baseNode) {
-  if (window.location.href.toLowerCase().indexOf("news") !== -1) {
-    console.log("censorPage()");
-    var censorPage = function() {
-      if ($(".newshelper-warning").length >= 1) {
-        return;
-      }
-
-      var buildWarningMessage = function(description, tags) {
-        return '<p class="newshelper-warning">' +
-          '[警告] 您可能是問題新聞的受害者！' +
-            '<span class="newshelper-description" style="font-size: small; display: block;">' +
-              description +
-            '</span>' +
-            '<span class="newshelper-tags" style="font-size: small; display: block;>{' +
-              tags +
-            '</span>}' +
-          '</p>';
-      };
-
-      var titleText = $("title").text(),
-          linkHref = window.location.href;
-
-      /* validate the page title and link */
-      var API_BASE = "http://taichung-chang-946908.middle2.me",
-          API_ENDPOINT = "/api/check_news"
-      var queryParams = {
-        title: titleText,
-        url: linkHref
-      };
-      $.getJSON(API_BASE + API_ENDPOINT, queryParams)
-        .done(function(result) {
-          if ($(".newshelper-warning").length < 1) {
-            console.log("titleText: " + titleText + ", linkHref: " + linkHref);
-            $("body").prepend(buildWarningMessage(result.description, result.tags));
-          }
-        });
-    };
-    censorPage();
-  }
-};
-
 var get_newshelper_db = function(cb){
     if (null !== opened_db) {
 	cb(opened_db);
@@ -291,7 +249,6 @@ var registerObserver = function() {
   var mutationObserver = new MutationObserver(function(mutations) {
     mutations.forEach(function(mutation) {
       censorFacebook(mutation.target);
-      censorNewsSite(mutation.target);
     });
   });
   mutationObserver.observe(mutationObserverConfig.target, mutationObserverConfig.config);
@@ -301,7 +258,6 @@ var main = function() {
   $(function(){
     /* fire up right after the page loaded*/
     censorFacebook(document.body);
-    //censorNewsSite(document.body);
 
     chrome.extension.sendRequest({method: 'page'}, function(response){});
     sync_report_data();
