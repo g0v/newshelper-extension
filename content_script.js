@@ -92,7 +92,7 @@ var get_recent_report = function(cb){
 var sync_report_data = function(){
     get_newshelper_db(function(opened_db){
 	get_recent_report(function(report){
-	    $.get('http://newshelper.g0v.ronny.tw/index/data?time=' + (report ? parseInt(report.updated_at) : 0), function(ret){
+	    $.get('http://newshelper.g0v.tw/index/data?time=' + (report ? parseInt(report.updated_at) : 0), function(ret){
 		    var transaction = opened_db.transaction("report", 'readwrite');
 		    var objectStore = transaction.objectStore("report");
 		    if (ret.data) {
