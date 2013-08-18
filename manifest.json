@@ -3,7 +3,7 @@
 
   "name": "新聞小幫手",
   "description": "協助您判別含有誤導資訊的新聞",
-  "version": "1.0.2",
+  "version": "1.0.3",
 
   "permissions": [
     "notifications",
@@ -33,7 +33,7 @@
       "css": [
         "content_style.css"
       ],
-      "run_at" : "document_idle",
+      "run_at" : "document_start",
       "all_frames" : true
     }
   ]
