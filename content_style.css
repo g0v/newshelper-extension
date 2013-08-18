@@ -1,3 +1,12 @@
+.newshelper-warning {
+    background: hsl(0, 50%, 50%);
+    color: white;
+    font-size: large;
+    text-align: center;
+    width: 100%;
+    padding: 5px 0;
+}
+
 .newshelper-warning-facebook {
 	 background: hsl(50, 100%, 70%);
    color: hsl(0, 0%, 20%);
