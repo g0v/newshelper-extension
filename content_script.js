@@ -267,8 +267,12 @@ var registerObserver = function() {
 };
 
 var buildActionBar = function(options) {
+  var url = 'http://newshelper.g0v.tw';
+  if ('undefined' !== typeof(options.title) && 'undefined' !== typeof(options.link)) {
+    url += '?news_link=' + encodeURIComponent(options.link) + '&news_title= ' + encodeURIComponent(options.title);
+  }
   return '<span class="newshelper-action">' +
-         '<a href="http://newshelper.g0v.tw/">回報給新聞小幫手</a></span>';
+         '<a href="' + url + '" target="_blank">回報給新聞小幫手</a></span>';
 };
 
 var hookActionBar = function() {
