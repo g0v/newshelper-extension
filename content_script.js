@@ -164,7 +164,7 @@ var check_report = function(title, url, cb){
     var get_request = index.get(url);
     get_request.onsuccess = function(){
       // 如果有找到結果，並且沒有被刪除
-      if (get_request.result && !parseInt(get_request.reqsult.deleted_at, 10)) {
+      if (get_request.result && !parseInt(get_request.result.deleted_at, 10)) {
         cb(get_request.result);
       }
     };
