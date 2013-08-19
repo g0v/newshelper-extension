@@ -3,7 +3,7 @@
 
   "name": "新聞小幫手",
   "description": "協助您判別含有誤導資訊的新聞",
-  "version": "1.0.4.3",
+  "version": "1.0.4.4",
 
   "permissions": [
     "notifications",
@@ -36,5 +36,10 @@
       "run_at" : "document_start",
       "all_frames" : true
     }
-  ]
+  ],
+  "icons" : {
+     "128" : "newshelper128x128.png",
+     "96" : "newshelper96x96.png",
+     "48" : "newshelper48x48.png"
+  }
 }
