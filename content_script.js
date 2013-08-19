@@ -204,7 +204,7 @@ var censorFacebook = function(baseNode) {
       // 先看看是不是 uiStreamActionFooter, 表示是同一個新聞有多人分享, 那只要最上面加上就好了
       var addedAction = false;
       containerNode.parent('div[role=article]').find('.uiStreamActionFooter').each(function(idx, uiStreamSource) {
-	  $(uiStreamSource).append($($('<li></li>').html(buildActionBar({title: titleText, link: linkHref}))));
+	  $(uiStreamSource).find('li:first').append('·  + buildActionBar({title: titleText, link: linkHref}));
 	  addedAction = true;
       });
 
