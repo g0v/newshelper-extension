@@ -52,6 +52,9 @@ var get_time_diff = function(time){
 
 
 var check_recent_seen = function(report){
+  if (parseInt(report.deleted_at, 10)) {
+      return;
+  }
   get_newshelper_db(function(opened_db){
     var transaction = opened_db.transaction("read_news", 'readonly');
     var objectStore = transaction.objectStore("read_news");
@@ -63,9 +66,6 @@ var check_recent_seen = function(report){
       };
 
       // 如果已經被刪除了就跳過
-      if (parseInt(get_request.result.deleted_at, 10)) {
-        return;
-      }
       chrome.extension.sendRequest({
         method: 'add_notification',
         title: '新聞小幫手提醒您',
