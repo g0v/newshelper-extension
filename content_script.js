@@ -204,18 +204,18 @@ var censorFacebook = function(baseNode) {
       // 先看看是不是 uiStreamActionFooter, 表示是同一個新聞有多人分享, 那只要最上面加上就好了
       var addedAction = false;
       containerNode.parent('div[role=article]').find('.uiStreamActionFooter').each(function(idx, uiStreamSource) {
-	  $(uiStreamSource).find('li:first').append('· ' + buildActionBar({title: titleText, link: linkHref}));
-	  addedAction = true;
+        $(uiStreamSource).find('li:first').append(' · ' + buildActionBar({title: titleText, link: linkHref}));
+        addedAction = true;
       });
 
       // 再看看單一動態，要加在 .uiStreamSource
       if (!addedAction) {
-	  containerNode.parent('div[role=article]').find('.uiStreamSource').each(function(idx, uiStreamSource) {
-	      $($('<span></span>').html(buildActionBar({title: titleText, link: linkHref}))).insertBefore(uiStreamSource);
+        containerNode.parent('div[role=article]').find('.uiStreamSource').each(function(idx, uiStreamSource) {
+          $($('<span></span>').html(buildActionBar({title: titleText, link: linkHref}) + ' · ')).insertBefore(uiStreamSource);
 
-	      // should only have one uiStreamSource
-	      if (idx != 0) console.error(idx + titleText);
-	  });
+          // should only have one uiStreamSource
+          if (idx != 0) console.error(idx + titleText);
+        });
       }
 
       /* log the link first */
