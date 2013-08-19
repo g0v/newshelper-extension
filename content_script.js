@@ -261,10 +261,29 @@ var registerObserver = function() {
     mutations.forEach(function(mutation) {
       censorFacebook(mutation.target);
     });
+    hookActionBar();
   });
   mutationObserver.observe(mutationObserverConfig.target, mutationObserverConfig.config);
 };
 
+var buildActionBar = function(options) {
+  return '<span class="newshelper-action">' +
+         '<a href="http://newshelper.g0v.tw/">回報給新聞小幫手</a></span>';
+};
+
+var hookActionBar = function() {
+  $(document).find("div[role=article][data-newshelper!='attached']")
+             .each(function(idx, article) {
+    $(article).find('.uiStreamSource').each(function(idx, uiStreamSource) {
+      $(buildActionBar()).insertBefore(uiStreamSource);
+
+      // should only have one uiStreamSource
+      if (idx != 0) console.error(idx);
+    });
+
+    article.dataset.newshelper = 'attached';
+  });
+};
 
 var main = function() {
   $(function(){
