@@ -292,6 +292,10 @@ var buildActionBar = function(options) {
 
 var main = function() {
   $(function(){
+    // 避免 iframe 也觸發到動作
+    if (document.location.href.match('//www\.facebook\.com/ai\.php')) {
+      return;
+    }
     /* fire up right after the page loaded*/
     censorFacebook(document.body);
 
