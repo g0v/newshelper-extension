@@ -1,0 +1,17 @@
+#!/bin/bash
+for file in `git diff --cached --diff-filter=ACMRTUXB --name-only HEAD`
+do
+  extension=`echo $file|awk -F . '{print $2}'`
+
+  if [[ "$file" == *.js ]] && ! /usr/local/bin/gjslint --jslint_error all $file
+  then
+    echo $file
+    invalid=true;
+  fi
+done
+
+if [ "$invalid" = "true" ]
+then
+  exit 1;
+fi
+
