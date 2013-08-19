@@ -232,33 +232,36 @@ var censorFacebook = function(baseNode) {
 
 
     /* my timeline */
-    $(baseNode).find(".uiStreamAttachments").each(function(idx, uiStreamAttachment) {
-      var uiStreamAttachment = $(uiStreamAttachment)
-      if (!uiStreamAttachment.hasClass("newshelper-checked")) {
-        var titleText = uiStreamAttachment.find(".uiAttachmentTitle").text();
-        var linkHref = uiStreamAttachment.find("a").attr("href");
-        censorFacebookNode(uiStreamAttachment, titleText, linkHref);
-      }
+    $(baseNode)
+    .find(".uiStreamAttachments")
+    .not(".newshelper-checked")
+    .each(function(idx, uiStreamAttachment) {
+      uiStreamAttachment = $(uiStreamAttachment);
+      var titleText = uiStreamAttachment.find(".uiAttachmentTitle").text();
+      var linkHref = uiStreamAttachment.find("a").attr("href");
+      censorFacebookNode(uiStreamAttachment, titleText, linkHref);
     });
 
     /* others' timeline, fan page */
-    $(baseNode).find(".shareUnit").each(function(idx, shareUnit) {
-      var shareUnit = $(shareUnit);
-      if (!shareUnit.hasClass("newshelper-checked")) {
-        var titleText = shareUnit.find(".fwb").text();
-        var linkHref = shareUnit.find("a").attr("href");
-        censorFacebookNode(shareUnit, titleText, linkHref)
-      };
+    $(baseNode)
+    .find(".shareUnit")
+    .not(".newshelper-checked")
+    .each(function(idx, shareUnit) {
+      shareUnit = $(shareUnit);
+      var titleText = shareUnit.find(".fwb").text();
+      var linkHref = shareUnit.find("a").attr("href");
+      censorFacebookNode(shareUnit, titleText, linkHref);
     });
 
     /* post page (single post) */
-    $(baseNode).find("._6kv").each(function(idx, userContent) {
-      var userContent = $(userContent);
-      if (!userContent.hasClass("newshelper-checked")) {
-        var titleText = userContent.find(".mbs").text();
-        var linkHref = userContent.find("a").attr("href");
-        censorFacebookNode(userContent, titleText, linkHref);
-      };
+    $(baseNode)
+    .find("._6kv")
+    .not(".newshelper-checked")
+    .each(function(idx, userContent) {
+      userContent = $(userContent);
+      var titleText = userContent.find(".mbs").text();
+      var linkHref = userContent.find("a").attr("href");
+      censorFacebookNode(userContent, titleText, linkHref);
     });
   }
 };
@@ -274,10 +277,23 @@ var registerObserver = function() {
       characterData: true
     }
   };
+
+  var throttle = (function() {
+    var timer_
+    return function(fn, wait) {
+      if (timer_) {
+        clearTimeout(timer_);
+      }
+      timer_ = setTimeout(fn, wait);
+    };
+  })();
+
   var mutationObserver = new MutationObserver(function(mutations) {
-    mutations.forEach(function(mutation) {
-      censorFacebook(mutation.target);
-    });
+    // So far, the value of mutation.target is always document.body.
+    // Unless we want to do more fine-granted control, it is ok to pass document.body for now.
+    throttle(function() {
+      censorFacebook(document.body);
+    }, 1000);
   });
   mutationObserver.observe(mutationObserverConfig.target, mutationObserverConfig.config);
 };
