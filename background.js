@@ -6,7 +6,7 @@ function onRequest(request, sender, sendResponse) {
 
     if (request.method == 'add_notification') {
         var notification = window.webkitNotifications.createNotification(
-              '' + request.image,
+              'newshelper48x48.png',
               '' + request.title,
               '' + request.body
         );
