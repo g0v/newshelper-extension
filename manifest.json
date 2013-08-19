@@ -3,7 +3,7 @@
 
   "name": "新聞小幫手",
   "description": "協助您判別含有誤導資訊的新聞",
-  "version": "1.0.3",
+  "version": "1.0.4.1",
 
   "permissions": [
     "notifications",
