@@ -35,9 +35,9 @@
 .arrow-up {
   width: 0; 
   height: 0; 
-  border-left: 10px solid transparent;
-  border-right: 10px solid transparent; 
-  border-bottom: 10px solid hsl(50, 100%, 70%);
+  border-left: 15px solid transparent;
+  border-right: 15px solid transparent;
+  border-bottom: 15px solid hsl(50, 100%, 70%);
   position: relative;
   top: -10px;
   margin: 0 auto;
