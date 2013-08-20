@@ -242,6 +242,14 @@ var censorFacebook = function(baseNode) {
         });
       }
 
+      // 再來是個人頁面
+      if (!addedAction) {
+        containerNode.parent('div[role="article"]').siblings('.uiCommentContainer').find('.UIActionLinks').each(function(idx, uiStreamSource){
+          $(uiStreamSource).append(' · ').append(buildActionBar({title: titleText, link: linkHref}));
+          addedAction = true;
+        });
+      }
+
       /* log the link first */
       log_browsed_link(linkHref, titleText);
 
