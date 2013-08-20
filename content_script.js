@@ -192,6 +192,12 @@ var censorFacebook = function(baseNode) {
       if (matches) {
         linkHref = decodeURIComponent(matches[1]);
       }
+      // 處理 被加上 ?fb_action_ids=xxxxx 的情況
+      matches = linkHref.match('(.*)[?&]fb_action_ids=.*');
+      if (matches) {
+        linkHref = matches[1];
+      }
+
       var containerNode = $(containerNode);
       var className = "newshelper-checked";
       if (containerNode.hasClass(className)) {
