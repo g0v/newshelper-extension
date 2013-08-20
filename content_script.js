@@ -144,6 +144,10 @@ var log_browsed_link = function(link, title) {
       var index = objectStore.index('link');
       var get_request = index.get(link);
       get_request.onsuccess = function(){
+        if (!get_request.result) {
+          console.log('link=' + link + ' is not found in IndexedDB');
+          return;
+        }
         // update last_seen_at
         var put_request = objectStore.put({
           id: get_request.result.id,
