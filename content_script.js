@@ -219,8 +219,17 @@ var censorFacebook = function(baseNode) {
         containerNode.parent('div[role=article]').find('.uiStreamSource').each(function(idx, uiStreamSource) {
           $($('<span></span>').html(buildActionBar({title: titleText, link: linkHref}) + ' · ')).insertBefore(uiStreamSource);
 
+          addedAction = true;
           // should only have one uiStreamSource
           if (idx != 0) console.error(idx + titleText);
+        });
+      }
+
+      // 再來有可能是有人說某個連結讚
+      if (!addedAction) {
+        containerNode.parent('div.storyInnerContent').find('.uiStreamSource').each(function(idx, uiStreamSource){
+          $($('<span></span>').html(buildActionBar({title: titleText, link: linkHref}) + ' · ')).insertBefore(uiStreamSource);
+          addedAction = true;
         });
       }
 
