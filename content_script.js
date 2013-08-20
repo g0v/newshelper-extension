@@ -118,10 +118,15 @@ var sync_report_data = function(){
 };
 
 
+var seen_link = {};
 var log_browsed_link = function(link, title) {
   if (!link) {
     return;
   }
+  if (seen_link[link]) {
+    return;
+  }
+  seen_link[link] = true;
 
   get_newshelper_db(function(opened_db){
     var transaction = opened_db.transaction("read_news", 'readwrite');
