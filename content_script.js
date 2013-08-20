@@ -193,6 +193,7 @@ var buildWarningMessage = function(options){
 
 
 var censorFacebook = function(baseNode) {
+  console.log('censorFacebook');
   if (window.location.host.indexOf("www.facebook.com") !== -1) {
     /* log browsing history into local database for further warning */
     /* add warning message to a Facebook post if necessary */
@@ -312,21 +313,27 @@ var registerObserver = function() {
     };
   })();
 
-  var mutationObserver = new MutationObserver(function(mutations) {
-    throttle(function() {
-      var contentArea = document.getElementById("contentArea");
-      censorFacebook(contentArea);
-    }, 1000);
-  });
-
-  // Ideally, we should only observe the change of document.getElementById("contentArea")
-  // But, it doesn't work. Use document.body for now.
-  var target = document.body; // document.getElementById("contentArea");
+  var target = document.getElementById("contentArea");
   var config = {
     attributes: true,
     childList: true,
-    characterData: true
+    characterData: true,
+    subtree: true,
   };
+
+  var mutationObserver = new MutationObserver(function(mutations) {
+    var hasNewNode = false;
+    mutations.forEach(function(mutation, idx) {
+      if(mutation.type == 'childList' && mutation.addedNodes.length > 0)
+        hasNewNode = true;
+    });
+    if (hasNewNode) {
+      throttle(function() {
+        censorFacebook(target);
+      }, 1000);      
+    }
+  });
+
   mutationObserver.observe(target, config);
 };
 
