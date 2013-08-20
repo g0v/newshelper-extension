@@ -193,7 +193,7 @@ var buildWarningMessage = function(options){
 
 
 var censorFacebook = function(baseNode) {
-  console.log('censorFacebook');
+  //console.log('censorFacebook');
   if (window.location.host.indexOf("www.facebook.com") !== -1) {
     /* log browsing history into local database for further warning */
     /* add warning message to a Facebook post if necessary */
