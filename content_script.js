@@ -202,7 +202,7 @@ var censorFacebook = function(baseNode) {
         linkHref = decodeURIComponent(matches[1]);
       }
       // 處理 被加上 ?fb_action_ids=xxxxx 的情況
-      matches = linkHref.match('(.*)[?&]fb_action_ids=.*');
+      matches = ('' + linkHref).match('(.*)[?&]fb_action_ids=.*');
       if (matches) {
         linkHref = matches[1];
       }
