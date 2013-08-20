@@ -298,17 +298,9 @@ var censorFacebook = function(baseNode) {
   }
 };
 
-
+/* deal with changed DOMs (i.e. AJAX-loaded content) */
 var registerObserver = function() {
   var MutationObserver = window.MutationObserver || window.WebKitMutationObserver;
-  var mutationObserverConfig = {
-    target: document.getElementsByTagName("body")[0],
-    config: {
-      attributes: true,
-      childList: true,
-      characterData: true
-    }
-  };
 
   var throttle = (function() {
     var timer_
@@ -321,13 +313,21 @@ var registerObserver = function() {
   })();
 
   var mutationObserver = new MutationObserver(function(mutations) {
-    // So far, the value of mutation.target is always document.body.
-    // Unless we want to do more fine-granted control, it is ok to pass document.body for now.
     throttle(function() {
-      censorFacebook(document.body);
+      var contentArea = document.getElementById("contentArea");
+      censorFacebook(contentArea);
     }, 1000);
   });
-  mutationObserver.observe(mutationObserverConfig.target, mutationObserverConfig.config);
+
+  // Ideally, we should only observe the change of document.getElementById("contentArea")
+  // But, it doesn't work. Use document.body for now.
+  var target = document.body; // document.getElementById("contentArea");
+  var config = {
+    attributes: true,
+    childList: true,
+    characterData: true
+  };
+  mutationObserver.observe(target, config);
 };
 
 var buildActionBar = function(options) {
@@ -338,16 +338,37 @@ var buildActionBar = function(options) {
   return '<a href="' + url + '" target="_blank">回報給新聞小幫手</a>';
 };
 
+var excludedPaths = [
+  'ai.php',
+  'generic.php',
+  //'/ajax/pagelet/generic.php/GroupFeedPagelet',
+  //'/ajax/pagelet/generic.php/MoreStoriesPagelet'
+  //'/ajax/home/generic.php'
+];
+
 var main = function() {
-  $(function(){
-    /* fire up right after the page loaded*/
-    censorFacebook(document.body);
-
-    chrome.extension.sendRequest({method: 'page'}, function(response){});
-    sync_report_data();
-
-    /* deal with changed DOMs (i.e. AJAX-loaded content) */
-    registerObserver();
+  var excluded = false;
+  excludedPaths.forEach(function(excludedPath,idx) {
+    if (window.location.pathname.indexOf(excludedPath) !== -1) {
+      excluded = true;
+    }
   });
+  if (excluded)
+    return;
+  //console.log('newshelper_main', window.location.pathname);
+
+  // The contentArea is filled via AJAX.
+  // Only need to call censorFacebook() after contentArea is present
+  var timer_ = setInterval(function() {
+    var target = document.getElementById("contentArea");
+    if (target) {
+      clearInterval(timer_);
+      censorFacebook(target);
+      registerObserver();
+    }
+  }, 1000);
+
+  chrome.extension.sendRequest({method: 'page'}, function(response){});
+  sync_report_data();
 };
 main();
