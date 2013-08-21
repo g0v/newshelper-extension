@@ -194,43 +194,8 @@ var buildWarningMessage = function(options){
 };
 
 /*
-== 主頁 ==
-* XXX 有連結的留言
-* XXX 轉貼自 XXX
-* XXX 分享了 1 條連結。
-* XXX 和其他 2 個朋友分享了 1 條連結。
-```
-div[role=”article”]
-  div.uiStreamAttachments .fbMainStreamAttachment
-    ...
-      a.shareText
-      ...
-        div.uiAttachmentTitle
-        div.uiAttachmentDesc
-  form
-    span.uiStreamFooter
-      span.UIActionLinks
-```
-
-* XXX 說 1 條連結讚。
-* XXX 在他自己的連結上留言 
-```
-div[role=”article”]
-  ...
-    div.storyInnerContent
-      [SAME AS 有連結的留言 ]
-```
-
-== 單一連結 ==
-div[role=”article”]
-  div.uiCommentContainer
-    span.UIActionLinks
-
-== 個人頁面, 社團頁, 粉絲頁 ==
-div.contentArea
-  div[role=”article”]
-  div.uiCommentContainer
-    span.UIActionLinks
+See FB DOM Tree hierarchy
+https://github.com/g0v/newshelper-extension/wiki/Facebook-DOM
 */
 var censorFacebook = function(baseNode) {
   if (DEBUG_) console.log('censorFacebook', baseNode);
