@@ -198,13 +198,12 @@ See FB DOM Tree hierarchy
 https://github.com/g0v/newshelper-extension/wiki/Facebook-DOM
 */
 var censorFacebook = function(baseNode) {
-  if (DEBUG_) console.log('censorFacebook', baseNode);
   var t1_ = Date.now();
   if (window.location.host.indexOf("www.facebook.com") !== -1) {
     /* log browsing history into local database for further warning */
     /* add warning message to a Facebook post if necessary */
     var censorFacebookNode = function(containerNode, titleText, linkHref) {
-      if (DEBUG_) console.log('censorFacebookNode', containerNode, titleText, linkHref);
+      if (DEBUG_) console.log('censorFacebookNode', containerNode[0], titleText);
       var matches = ('' + linkHref).match('^http://www\.facebook\.com/l\.php\\?u=([^&]*)');
       if (matches) {
         linkHref = decodeURIComponent(matches[1]);
@@ -273,9 +272,9 @@ var censorFacebook = function(baseNode) {
           $(uiStreamSource).append(' · ').append(buildActionBar({title: titleText, link: linkHref}));
           addedAction = true;
         });
-
-        if (DEBUG_ && addedAction) console.log('found in single-post block');
       }
+
+      if (DEBUG_ && !addedAction) console.log('fail to insert actionbar');
 
       /* log the link first */
       log_browsed_link(linkHref, titleText);
@@ -382,6 +381,8 @@ var main = function() {
   if (target) {
     censorFacebook(target);
     registerObserver();
+  } else {
+    console.error('#contentArea or #content is not ready');
   }
 
   sync_report_data();
