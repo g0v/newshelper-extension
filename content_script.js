@@ -251,6 +251,15 @@ var censorFacebook = function(baseNode) {
         });
       }
 
+      // 新版Timeline
+      if (!addedAction) {
+        containerNode.parent('._4q_').find('._6p-').find('._5ciy').find('._6j_').each(function(idx, shareAction){
+         console.log(shareAction);
+         $($('<a class="_5cix"></a>').html(buildActionBar({title: titleText, link: linkHref}))).insertAfter(shareAction);
+          addedAction = true;
+        });
+      }
+
       /* log the link first */
       log_browsed_link(linkHref, titleText);
 
