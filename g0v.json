@@ -1,0 +1,54 @@
+{
+  "author": "ronnywang",
+  "status": "production",
+  "name": "newshelper-extension",
+  "description": "newshelper-extension: a chrome extension helps you to identify incorrect news",
+  "description_zh": "newshelper-extension: 告訴你你正受到有害新聞所害",
+  "homepage": "http://newshelper.g0v.tw",
+  "document": "https://docs.google.com/spreadsheet/ccc?key=0AvCxAZD9rYXMdGFrSjBHb2IxTW5mSE5vQVhGaThiX3c",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/g0v/newshelper-extension"
+  },
+  "licenses": [
+    {
+      "type": "MIT"
+    }
+  ],
+  "keywords": [
+    "javascript",
+    "jquery",
+    "php",
+    "bootstrap"
+  ],
+  "audience": [
+    "contributor"
+  ],
+  "products": [
+    "extension",
+    "web"
+  ],
+  "projects": [
+    "meta"
+  ],
+  "contributors": [
+    "ronnywang",
+    "Wonder",
+    "dannvix",
+    "Kirsten",
+    "Wahaho",
+    "Natata",
+    "kcwu",
+    "Lois",
+    "Miaout17",
+    "Michael LI",
+    "dannvix",
+    "wychi"
+  ],
+  "needs": [
+    "designer",
+    "writer",
+    "progammer"
+  ]
+}
+
