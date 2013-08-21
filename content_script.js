@@ -359,7 +359,7 @@ var buildActionBar = function(options) {
 };
 
 var main = function() {
-  var target = document.getElementById("contentArea");
+  var target = document.getElementById("contentArea") || document.getElementById("content");
   if (target) {
     censorFacebook(target);
     registerObserver();
