@@ -322,7 +322,9 @@ var registerObserver = function() {
     };
   })();
 
-  var target = document.getElementById("contentArea");
+  // 直接 censor 整個 document
+  // 這樣才能偵測到滑鼠點選換頁的事件
+  var target = document;
   var config = {
     attributes: true,
     childList: true,
@@ -331,6 +333,8 @@ var registerObserver = function() {
   };
 
   var mutationObserver = new MutationObserver(function(mutations) {
+    chrome.extension.sendRequest({method: 'page'}, function(response){});
+
     var hasNewNode = false;
     mutations.forEach(function(mutation, idx) {
       if(mutation.type == 'childList' && mutation.addedNodes.length > 0)
@@ -354,37 +358,13 @@ var buildActionBar = function(options) {
   return '<a href="' + url + '" target="_blank">回報給新聞小幫手</a>';
 };
 
-var excludedPaths = [
-  'ai.php',
-  'generic.php',
-  //'/ajax/pagelet/generic.php/GroupFeedPagelet',
-  //'/ajax/pagelet/generic.php/MoreStoriesPagelet'
-  //'/ajax/home/generic.php'
-];
-
 var main = function() {
-  var excluded = false;
-  excludedPaths.forEach(function(excludedPath,idx) {
-    if (window.location.pathname.indexOf(excludedPath) !== -1) {
-      excluded = true;
-    }
-  });
-  if (excluded)
-    return;
-  //console.log('newshelper_main', window.location.pathname);
+  var target = document.getElementById("contentArea");
+  if (target) {
+    censorFacebook(target);
+    registerObserver();
+  }
 
-  // The contentArea is filled via AJAX.
-  // Only need to call censorFacebook() after contentArea is present
-  var timer_ = setInterval(function() {
-    var target = document.getElementById("contentArea");
-    if (target) {
-      clearInterval(timer_);
-      censorFacebook(target);
-      registerObserver();
-    }
-  }, 1000);
-
-  chrome.extension.sendRequest({method: 'page'}, function(response){});
   sync_report_data();
 };
 main();
