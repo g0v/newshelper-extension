@@ -1,3 +1,5 @@
+var DEBUG_ = false;
+
 var get_newshelper_db = function(cb){
   if (null !== opened_db) {
     cb(opened_db);
@@ -191,13 +193,53 @@ var buildWarningMessage = function(options){
     '</div>';
 };
 
+/*
+== 主頁 ==
+* XXX 有連結的留言
+* XXX 轉貼自 XXX
+* XXX 分享了 1 條連結。
+* XXX 和其他 2 個朋友分享了 1 條連結。
+```
+div[role=”article”]
+  div.uiStreamAttachments .fbMainStreamAttachment
+    ...
+      a.shareText
+      ...
+        div.uiAttachmentTitle
+        div.uiAttachmentDesc
+  form
+    span.uiStreamFooter
+      span.UIActionLinks
+```
 
+* XXX 說 1 條連結讚。
+* XXX 在他自己的連結上留言 
+```
+div[role=”article”]
+  ...
+    div.storyInnerContent
+      [SAME AS 有連結的留言 ]
+```
+
+== 單一連結 ==
+div[role=”article”]
+  div.uiCommentContainer
+    span.UIActionLinks
+
+== 個人頁面, 社團頁, 粉絲頁 ==
+div.contentArea
+  div[role=”article”]
+  div.uiCommentContainer
+    span.UIActionLinks
+*/
 var censorFacebook = function(baseNode) {
-  //console.log('censorFacebook');
+  if (DEBUG_) console.log('censorFacebook', baseNode);
+  var t1_ = Date.now();
   if (window.location.host.indexOf("www.facebook.com") !== -1) {
     /* log browsing history into local database for further warning */
     /* add warning message to a Facebook post if necessary */
     var censorFacebookNode = function(containerNode, titleText, linkHref) {
+      if (DEBUG_) console.log('censorFacebookNode', containerNode, titleText, linkHref);
       var matches = ('' + linkHref).match('^http://www\.facebook\.com/l\.php\\?u=([^&]*)');
       if (matches) {
         linkHref = decodeURIComponent(matches[1]);
@@ -260,6 +302,16 @@ var censorFacebook = function(baseNode) {
         });
       }
 
+      // 再來是single post
+      if (!addedAction) {
+        containerNode.parent('div[role="article"]').find('.uiCommentContainer .UIActionLinks').each(function(idx, uiStreamSource){
+          $(uiStreamSource).append(' · ').append(buildActionBar({title: titleText, link: linkHref}));
+          addedAction = true;
+        });
+
+        if (DEBUG_ && addedAction) console.log('found in single-post block');
+      }
+
       /* log the link first */
       log_browsed_link(linkHref, titleText);
 
@@ -306,6 +358,8 @@ var censorFacebook = function(baseNode) {
       censorFacebookNode(userContent, titleText, linkHref);
     });
   }
+
+  if (DEBUG_) console.log('censorFacebook time', Date.now() - t1_);
 };
 
 /* deal with changed DOMs (i.e. AJAX-loaded content) */
