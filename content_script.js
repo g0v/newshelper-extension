@@ -71,7 +71,7 @@ var check_recent_seen = function(report){
       chrome.extension.sendRequest({
         method: 'add_notification',
         title: '新聞小幫手提醒您',
-        body: '您於' + get_time_diff(get_request.result.last_seen_at) + ' 看的新聞「' + get_request.result.title + '」 被人回報有錯誤：' + report.report_title,
+        body: '您於' + get_time_diff(get_request.result.last_seen_at) + ' 看的新聞「' + (get_request.result.title?get_request.result.title:report.news_title) + '」 被人回報有錯誤：' + report.report_title,
         link: report.report_link
       }, function(response){});
     };
