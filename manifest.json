@@ -20,6 +20,9 @@
       "default_popup" : "popup.html"
   },
 
+  "web_accessible_resources" : [
+    "jquery-2.0.3.min.map"
+  ],
   "content_scripts" : [
     {
       "matches": [
