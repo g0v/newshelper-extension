@@ -9,7 +9,9 @@
     "notifications",
     "http://newshelper.g0v.tw/*",
     "https://www.facebook.com/*",
-    "http://www.facebook.com/*"
+    "http://www.facebook.com/*",
+    "http://*/*",
+    "https://*/*"
   ],
 
   "background": { "scripts": ["background.js"] },
@@ -27,7 +29,9 @@
     {
       "matches": [
         "http://www.facebook.com/*",
-        "https://www.facebook.com/*"
+        "https://www.facebook.com/*",
+	"http://*/*",
+	"https://*/*"
       ],
       "js": [
         "jquery-2.0.3.min.js",

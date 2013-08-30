@@ -361,7 +361,7 @@ var registerObserver = function() {
     if (hasNewNode) {
       throttle(function() {
         censorFacebook(target);
-      }, 1000);      
+      }, 1000);
     }
   });
 
@@ -377,12 +377,25 @@ var buildActionBar = function(options) {
 };
 
 var main = function() {
-  var target = document.getElementById("contentArea") || document.getElementById("content");
-  if (target) {
-    censorFacebook(target);
-    registerObserver();
+  if (document.location.hostname == 'www.facebook.com') {
+    var target = document.getElementById("contentArea") || document.getElementById("content");
+    if (target) {
+      censorFacebook(target);
+      registerObserver();
+    } else {
+      console.error('#contentArea or #content is not ready');
+    }
   } else {
-    console.error('#contentArea or #content is not ready');
+     check_report('', document.location.href, function(report){
+	 chrome.extension.sendRequest({method: 'page'}, function(response){});
+	 document.body.style.border = "5px solid red";
+	 chrome.extension.sendRequest({
+	   method: 'add_notification',
+	   title: '注意，您可能是問題新聞的受害者',
+	   body: report.report_title,
+	   link: report.report_link
+	 }, function(response){});
+     });
   }
 
   sync_report_data();
