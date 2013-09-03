@@ -1,5 +1,5 @@
 function onRequest(request, sender, sendResponse) {
-    if (request.method== 'page') {
+    if (request.method == 'page') {
         // 顯示設定新聞小幫手的 page action
         chrome.pageAction.show(sender.tab.id);
     }
