@@ -14,7 +14,7 @@
     "https://*/*"
   ],
 
-  "background": { "scripts": ["background.js"] },
+  "background": { "scripts": ["jquery-2.0.3.min.js", "background.js"] },
 
   "page_action" : {
       "default_icon" : "page.png",
