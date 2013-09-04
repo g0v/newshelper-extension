@@ -53,8 +53,10 @@ var sync_db = function(){
           for (var i = 0; i < ret.data.length; i ++) {
             objectStore.put(ret.data[i]);
 
-            // 檢查最近天看過的內容是否有被加進去的
-	    check_recent_seen(ret.data[i]);
+	    // 檢查最近天看過的內容是否有被加進去的(有 report 才檢查，避免 indexeddb 清空後會被洗板)
+	    if (report) {
+	      check_recent_seen(ret.data[i]);
+	    }
           }
         }
       }, 'json');
