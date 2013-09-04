@@ -53,9 +53,12 @@ var sync_db = function(force_notification){
           for (var i = 0; i < ret.data.length; i ++) {
             objectStore.put(ret.data[i]);
 
-	    // 檢查最近天看過的內容是否有被加進去的(有 latest_report 才檢查，避免 indexeddb 清空後會被洗板, 如果 force_notification 為 true 就不檢查)
-	    if (force_notification || latest_report) {
-	      check_recent_seen(ret.data[i]);
+            // 檢查最近天看過的內容是否有被加進去的(有 latest_report 才檢查，避免 indexeddb 清空後會被洗板, 如果 force_notification 為 true 就不檢查)
+            if (force_notification || latest_report) {
+              // 只讓 notification 通知一次，如果之後再更新就不通知了
+              if (parseInt(ret.data[i].created_at, 10) > parseInt(latest_report.updated_at, 10)) {
+                check_recent_seen(ret.data[i]);
+              }
 	    }
           }
         }
