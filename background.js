@@ -20,7 +20,7 @@ function onRequest(request, sender, sendResponse) {
 		}
 		last_sync_at = (new Date()).getTime();
 
-		sync_db(request.group, sendResponse);
+		sync_db(false);
 	    }, 10000);
 	}
     }
@@ -43,7 +43,7 @@ chrome.extension.onRequest.addListener(onRequest);
 
 
 // sync db from api server
-var sync_db = function(){
+var sync_db = function(force_notification){
   get_newshelper_db(function(opened_db){
     get_recent_report(function(report){
       $.get('http://newshelper.g0v.tw/index/data?time=' + (report ? parseInt(report.updated_at) : 0), function(ret){
@@ -53,8 +53,8 @@ var sync_db = function(){
           for (var i = 0; i < ret.data.length; i ++) {
             objectStore.put(ret.data[i]);
 
-	    // 檢查最近天看過的內容是否有被加進去的(有 report 才檢查，避免 indexeddb 清空後會被洗板)
-	    if (report) {
+	    // 檢查最近天看過的內容是否有被加進去的(有 report 才檢查，避免 indexeddb 清空後會被洗板, 如果 force_notification 為 true 就不檢查)
+	    if (force_notification || report) {
 	      check_recent_seen(ret.data[i]);
 	    }
           }
