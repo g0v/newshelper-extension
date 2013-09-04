@@ -45,16 +45,16 @@ chrome.extension.onRequest.addListener(onRequest);
 // sync db from api server
 var sync_db = function(force_notification){
   get_newshelper_db(function(opened_db){
-    get_recent_report(function(report){
-      $.get('http://newshelper.g0v.tw/index/data?time=' + (report ? parseInt(report.updated_at) : 0), function(ret){
+    get_recent_report(function(latest_report){
+      $.get('http://newshelper.g0v.tw/index/data?time=' + (latest_report ? parseInt(latest_report.updated_at) : 0), function(ret){
         var transaction = opened_db.transaction("report", 'readwrite');
         var objectStore = transaction.objectStore("report");
         if (ret.data) {
           for (var i = 0; i < ret.data.length; i ++) {
             objectStore.put(ret.data[i]);
 
-	    // 檢查最近天看過的內容是否有被加進去的(有 report 才檢查，避免 indexeddb 清空後會被洗板, 如果 force_notification 為 true 就不檢查)
-	    if (force_notification || report) {
+	    // 檢查最近天看過的內容是否有被加進去的(有 latest_report 才檢查，避免 indexeddb 清空後會被洗板, 如果 force_notification 為 true 就不檢查)
+	    if (force_notification || latest_report) {
 	      check_recent_seen(ret.data[i]);
 	    }
           }
