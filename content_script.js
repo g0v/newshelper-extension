@@ -11,7 +11,7 @@ var check_report = function(title, url, cb){
     return;
   }
   chrome.extension.sendRequest({method: 'check_report', title: title, url: url}, function(ret){
-      if (ret !== false) {
+      if (ret !== false && ret) {
 	  cb(ret);
       }
   });
