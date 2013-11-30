@@ -100,10 +100,31 @@ var censorFacebook = function(baseNode) {
         });
       }
 
+      if (!addedAction) {
+        containerNode.parent().parent('.UFICommentContent').parent().find('.UFICommentActions').each(function(idx, foo){
+	  $(foo).append(' · ', buildActionBar({title: titleText, link: linkHref}));
+          addedAction = true;
+        });
+      }
+      if (!addedAction) {
+        // this check sould be after UFICommentContent
+        containerNode.parents('._5pax').find('._5pcp').each(function(idx, foo){
+	  $(foo).append(' · ', buildActionBar({title: titleText, link: linkHref}));
+          addedAction = true;
+        });
+      }
+
       // 再來是single post
       if (!addedAction) {
         containerNode.parent('div[role="article"]').find('.uiCommentContainer .UIActionLinks').each(function(idx, uiStreamSource){
           $(uiStreamSource).append(' · ').append(buildActionBar({title: titleText, link: linkHref}));
+          addedAction = true;
+        });
+      }
+
+      if (!addedAction) {
+        containerNode.siblings().find('.uiCommentContainer').find('.UIActionLinks').each(function(idx, foo){
+	  $(foo).append(' · ', buildActionBar({title: titleText, link: linkHref}));
           addedAction = true;
         });
       }
@@ -134,6 +155,16 @@ var censorFacebook = function(baseNode) {
       censorFacebookNode(uiStreamAttachment, titleText, linkHref);
     });
 
+    $(baseNode)
+    .find("._5rwo")
+    .not(".newshelper-checked")
+    .each(function(idx, userContent) {
+      userContent = $(userContent);
+      var titleText = userContent.find(".fwb").text();
+      var linkHref = userContent.find("a").attr("href");
+      censorFacebookNode(userContent, titleText, linkHref);
+    });
+
     /* others' timeline, fan page */
     $(baseNode)
     .find(".shareUnit")
@@ -143,6 +174,16 @@ var censorFacebook = function(baseNode) {
       var titleText = shareUnit.find(".fwb").text();
       var linkHref = shareUnit.find("a").attr("href");
       censorFacebookNode(shareUnit, titleText, linkHref);
+    });
+
+    $(baseNode)
+    .find("._5rny")
+    .not(".newshelper-checked")
+    .each(function(idx, userContent) {
+      userContent = $(userContent);
+      var titleText = userContent.find(".fwb").text();
+      var linkHref = userContent.find("a").attr("href");
+      censorFacebookNode(userContent, titleText, linkHref);
     });
 
     /* post page (single post) */
