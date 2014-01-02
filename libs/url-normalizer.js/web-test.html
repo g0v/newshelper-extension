@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+<script src="url-normalizer.js"></script>
+<script src="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/bootstrap.min.js"></script>
+<link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/2.2.2/css/bootstrap.css">
+<script>
+var urls = [
+'http://www.appledaily.com.tw/realtimenews/article/finance/20131225/314703/【台股開盤】開高上漲11點',
+'http://www.chinatimes.com/newspapers/蠻牛再起-3登年終球王-20131108000743-260111?from=fb',
+'http://www.cna.com.tw/News/aFE/201309070021-1.aspx',
+'http://www.cna.com.tw/News/firstnews/201309070021-1.aspx',
+'http://www.cna.com.tw/Topic/Popular/3959-1/201309070021-1.aspx',
+'http://www.nownews.com/n/2013/10/28/1003767',
+'http://newtalk.tw/news/2013/12/30/43243.html',
+'http://iservice.libertytimes.com.tw/liveNews/news.php?no=927070&type=%E5%9C%8B%E9%9A%9B',
+'http://www.libertytimes.com.tw/2013/new/dec/30/today-taipei1.htm',
+'http://www.ettoday.net/news/20131106/291629.htm',
+'http://tw.news.yahoo.com/敘利亞沙林原料-英廠商提供的-044631577.html',
+'https://www.facebook.com/photo.php?fbid=187340678125996&set=a.169476096579121.1073741830.100005501943040&type=1&theater',
+'https://www.facebook.com/394896373929368/posts/552832544802416',
+'https://www.facebook.com/permalink.php?story_fbid=691671064186291&id=100000302107473',
+'http://udn.com/NEWS/BREAKINGNEWS/BREAKINGNEWS1/民進黨立委杯葛-院會無議程-8395297.shtml',
+'http://forum.udn.com/forum/NewsLetter/NewsPreview?Encode=Big5&NewsID=8108263&ch=fb_share&R=346',
+'http://www.udn.com/2013/10/31/NEWS/NATIONAL/NATS1/8263682.shtml?ch=fb_share'
+];
+</script>
+</head>
+<body>
+<pre id="output"></pre>
+<script>
+var output = '';
+for (var i = 0; i < urls.length; i ++) {
+  output += "URLNormalizer.query(" + urls[i] + ")\n";
+  output += "OUTPUT: " + JSON.stringify(URLNormalizer.query(urls[i]), '', 2) + "\n\n";
+}
+document.getElementById('output').innerHTML = output;
+</script>
+</body>
+</html>
