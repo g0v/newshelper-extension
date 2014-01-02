@@ -3,7 +3,7 @@
 
   "name": "新聞小幫手",
   "description": "協助您判別含有誤導資訊的新聞",
-  "version": "1.0.5.2",
+  "version": "1.0.6",
 
   "permissions": [
     "notifications",
@@ -14,7 +14,7 @@
     "https://*/*"
   ],
 
-  "background": { "scripts": ["jquery-2.0.3.min.js", "background.js"] },
+  "background": { "scripts": ["jquery-2.0.3.min.js", "libs/url-normalizer.js/url-normalizer.js", "background.js"] },
 
   "page_action" : {
       "default_icon" : "icon.png",

@@ -193,16 +193,31 @@ var check_report = function(title, url, cb){
   get_newshelper_db(function(opened_db){
     var transaction = opened_db.transaction("report", 'readonly');
     var objectStore = transaction.objectStore("report");
-    var index = objectStore.index('news_link');
 
-    var get_request = index.get(url);
-    get_request.onsuccess = function(){
-      // 如果有找到結果，並且沒有被刪除
-      if (get_request.result && !parseInt(get_request.result.deleted_at, 10)) {
-        return cb(get_request.result);
-      }
-      cb(false);
-    };
+    var normalized_data = URLNormalizer.query(url);
+    
+    if (normalized_data) {
+      var index = objectStore.index('news_link_unique');
+      var get_request = index.get(normalized_data.normalized_id);
+      get_request.onsuccess = function(){
+        // 如果有找到結果，並且沒有被刪除
+        if (get_request.result && !parseInt(get_request.result.deleted_at, 10)) {
+          return cb(get_request.result);
+        }
+        cb(false);
+      };
+    
+    } else {
+      var index = objectStore.index('news_link');
+      var get_request = index.get(url);
+      get_request.onsuccess = function(){
+        // 如果有找到結果，並且沒有被刪除
+        if (get_request.result && !parseInt(get_request.result.deleted_at, 10)) {
+          return cb(get_request.result);
+        }
+        cb(false);
+      };
+    }
   });
 };
 
