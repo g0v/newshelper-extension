@@ -75,7 +75,7 @@ var get_newshelper_db = function(cb){
     return;
   }
 
-  var request = indexedDB.open('newshelper', '7');
+  var request = indexedDB.open('newshelper', '8');
   request.onsuccess = function(event){
     opened_db = request.result;
     cb(opened_db);
@@ -93,15 +93,15 @@ var get_newshelper_db = function(cb){
     var objectStore = event.currentTarget.result.createObjectStore("report", { keyPath: "id" });
     objectStore.createIndex("news_title", "news_title", { unique: false });
     objectStore.createIndex("news_link", "news_link", { unique: false });
+    objectStore.createIndex("news_link_unique", "news_link_unique", { unique: false });
     objectStore.createIndex("updated_at", "updated_at", { unique: false });
 
     try {
-      event.currentTarget.result.deleteObjectStore('read_news');
+      var objectStore = event.currentTarget.result.createObjectStore("read_news", { keyPath: "id", autoIncrement: true });
+      objectStore.createIndex("title", "title", { unique: false });
+      objectStore.createIndex("link", "link", { unique: true });
+      objectStore.createIndex("last_seen_at", "last_seen_at", { unique: false });
     } catch (e) {}
-    var objectStore = event.currentTarget.result.createObjectStore("read_news", { keyPath: "id", autoIncrement: true });
-    objectStore.createIndex("title", "title", { unique: false });
-    objectStore.createIndex("link", "link", { unique: true });
-    objectStore.createIndex("last_seen_at", "last_seen_at", { unique: false });
   };
 };
 
