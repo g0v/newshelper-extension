@@ -204,6 +204,9 @@
   };
 
   exports.parse_str = function(query_str){
+    if ('undefined' === typeof(query_str)) {
+      return {};
+    }
     if (query_str == '') {
       return {};
     }
