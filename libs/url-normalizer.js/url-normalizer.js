@@ -31,6 +31,7 @@
         ret.normalized_id = exports.replace_var(csvmap[i][3], matches, url_parts['query']);
         cb(ret);
       }
+      cb(false);
     });
   };
 
@@ -72,7 +73,8 @@
       csvFile.onreadystatechange = function(){
         if (csvFile.readyState == 4) {
           if (csvFile.status == 200) {
-            cb(csvFile.responseText.split("\n").map(function(line){ return line.split(','); }));
+            csvmap = csvFile.responseText.split("\n").map(function(line){ return line.split(','); });
+	    cb(csvmap);
           }
         }
       };
