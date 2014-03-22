@@ -165,6 +165,16 @@ var censorFacebook = function(baseNode) {
       censorFacebookNode(userContent, titleText, linkHref);
     });
 
+    $(baseNode)
+    .find("._42ef")
+    .not(".newshelper-checked")
+    .each(function(idx, userContent) {
+      userContent = $(userContent);
+      var titleText = userContent.find(".fwb").text();
+      var linkHref = userContent.find("a").attr("href");
+      censorFacebookNode(userContent, titleText, linkHref);
+    });
+
     /* others' timeline, fan page */
     $(baseNode)
     .find(".shareUnit")
