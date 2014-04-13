@@ -25,7 +25,7 @@ class URLNormalizer
             if ($line[0] != $url_parts['host']) {
                 continue;
             }
-            if (!preg_match($line[1], $url_parts['path'], $matches)) {
+            if (!preg_match($line[1], urldecode($url_parts['path']), $matches)) {
                 continue;
             }
             $ret->normalized_url = self::replaceVar($line[2], $matches, array_key_exists('query', $url_parts) ? $url_parts['query'] : '');
