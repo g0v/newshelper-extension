@@ -10,7 +10,7 @@ www.facebook.com,'^/([^/]*)/posts/([0-9]*)',https://www.facebook.com{$0},www.fac
 tw.news.yahoo.com,'^/(.*)\.html$',http://tw.news.yahoo.com{$0},tw.news.yahoo.com/{$1}
 www.ettoday.net,'^/news/([0-9]*)/([0-9]*)\.htm$',http://www.ettoday.net{$0},www.ettoday.net/news/{$2}
 iservice.libertytimes.com.tw,'^/liveNews/news.php',http://iservice.libertytimes.com.tw/liveNews/news.php?no={$no},iservice.libertytimes.com.tw/liveNews/{$no}
-news.ltn.com.tw,'^/news/[^/]*/[^/]*/([0-9]*)',http://iservice.libertytimes.com.tw/liveNews/news.php?no={$no},iservice.libertytimes.com.tw/liveNews/{$1}
+news.ltn.com.tw,'^/news/[^/]*/[^/]*/([0-9]*)',http://iservice.libertytimes.com.tw/liveNews/news.php?no={$1},iservice.libertytimes.com.tw/liveNews/{$1}
 www.libertytimes.com.tw,'^/([0-9]*)/new/([a-z]*)/([0-9]*)/today-([^.]*)\.htm',http://www.libertytimes.com.tw{$0},www.libertytimes.com.tw/new/{$1}/{$2}/{$3}/{$4}
 newtalk.tw,'^/news/([0-9]*)/([0-9]*)/([0-9]*)/([0-9]*)\.html',http://newtalk.tw{$0},newtalk.tw/{$4}
 www.nownews.com,'^/n/[0-9]*/[0-9]*/[0-9]*/([0-9]*)',http://www.nownews.com{$0},www.nownews.com/{$1}
