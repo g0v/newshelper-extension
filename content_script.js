@@ -64,6 +64,24 @@ var censorFacebook = function(baseNode) {
         addedAction = true;
       });
 
+      if (!addedAction) {
+        containerNode.parent('._5pcr')
+        .find('div.fcg.fwn').each(function(idx, div){
+          $(div).append(' ' + buildActionBar({title: titleText, link: linkHref}));
+          addedAction = true;
+          return false; // 只加第一個
+        });
+
+      }
+
+      if (!addedAction) {
+        containerNode.parent().parent().parent('.userContentWrapper')
+        .find('._5vsi').each(function(idx, shareLink){
+          $(shareLink).append(' . ' + buildActionBar({title: titleText, link: linkHref}));
+          addedAction = true;
+        });
+      }
+
       // 再看看單一動態，要加在 .uiStreamSource
       if (!addedAction) {
         containerNode.parent('div[role=article]').find('.uiStreamSource').each(function(idx, uiStreamSource) {
@@ -152,6 +170,9 @@ var censorFacebook = function(baseNode) {
       uiStreamAttachment = $(uiStreamAttachment);
       var titleText = uiStreamAttachment.find(".uiAttachmentTitle").text();
       var linkHref = uiStreamAttachment.find("a").attr("href");
+      if (!linkHref) {
+        linkHref = uiStreamAttachment.find(".uiAttachmentTitle").find("a").attr("href");
+      }
       censorFacebookNode(uiStreamAttachment, titleText, linkHref);
     });
 
@@ -165,12 +186,14 @@ var censorFacebook = function(baseNode) {
       censorFacebookNode(userContent, titleText, linkHref);
     });
 
+    // 新版 Facebook
     $(baseNode)
-    .find("._42ef")
+    .find("div.mtm")
     .not(".newshelper-checked")
     .each(function(idx, userContent) {
       userContent = $(userContent);
       var titleText = userContent.find(".fwb").text();
+      if (!titleText) { titleText = userContent.find("._6m6").find("a").text(); }
       var linkHref = userContent.find("a").attr("href");
       censorFacebookNode(userContent, titleText, linkHref);
     });
