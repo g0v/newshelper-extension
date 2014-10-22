@@ -36,7 +36,7 @@ var censorFacebook = function(baseNode) {
   if (window.location.host.indexOf("www.facebook.com") !== -1) {
     /* log browsing history into local database for further warning */
     /* add warning message to a Facebook post if necessary */
-    var censorFacebookNode = function(containerNode, titleText, linkHref) {
+    var censorFacebookNode = function(containerNode, titleText, linkHref, rule) {
       if (DEBUG_) console.log('censorFacebookNode', containerNode[0], titleText);
       var matches = ('' + linkHref).match('^http://(l|www)\.facebook\.com/l\.php\\?u=([^&]*)');
       if (matches) {
@@ -60,14 +60,14 @@ var censorFacebook = function(baseNode) {
       // 先看看是不是 uiStreamActionFooter, 表示是同一個新聞有多人分享, 那只要最上面加上就好了
       var addedAction = false;
       containerNode.parent('div[role=article]').find('.uiStreamActionFooter').each(function(idx, uiStreamSource) {
-        $(uiStreamSource).find('li:first').append(' · ' + buildActionBar({title: titleText, link: linkHref}));
+        $(uiStreamSource).find('li:first').append(' · ' + buildActionBar({title: titleText, link: linkHref, rule: rule, action: 1}));
         addedAction = true;
       });
 
       // 再看看單一動態，要加在 .uiStreamSource
       if (!addedAction) {
         containerNode.parent('div[role=article]').find('.uiStreamSource').each(function(idx, uiStreamSource) {
-          $($('<span></span>').html(buildActionBar({title: titleText, link: linkHref}) + ' · ')).insertBefore(uiStreamSource);
+          $($('<span></span>').html(buildActionBar({title: titleText, link: linkHref, rule: rule, action: 2}) + ' · ')).insertBefore(uiStreamSource);
 
           addedAction = true;
           // should only have one uiStreamSource
@@ -78,7 +78,7 @@ var censorFacebook = function(baseNode) {
       // 再來有可能是有人說某個連結讚
       if (!addedAction) {
         containerNode.parent('div.storyInnerContent').find('.uiStreamSource').each(function(idx, uiStreamSource){
-          $($('<span></span>').html(buildActionBar({title: titleText, link: linkHref}) + ' · ')).insertBefore(uiStreamSource);
+          $($('<span></span>').html(buildActionBar({title: titleText, link: linkHref, rule: rule, action: 3}) + ' · ')).insertBefore(uiStreamSource);
           addedAction = true;
         });
       }
@@ -86,7 +86,7 @@ var censorFacebook = function(baseNode) {
       // 再來是個人頁面
       if (!addedAction) {
         containerNode.parent('div[role="article"]').siblings('.uiCommentContainer').find('.UIActionLinks').each(function(idx, uiStreamSource){
-          $(uiStreamSource).append(' · ').append(buildActionBar({title: titleText, link: linkHref}));
+          $(uiStreamSource).append(' · ').append(buildActionBar({title: titleText, link: linkHref, rule: rule, action: 4}));
           addedAction = true;
         });
       }
@@ -94,22 +94,21 @@ var censorFacebook = function(baseNode) {
       // 新版Timeline
       if (!addedAction) {
         containerNode.parent('._4q_').find('._6p-').find('._5ciy').find('._6j_').each(function(idx, shareAction){
-         console.log(shareAction);
-         $($('<a class="_5cix"></a>').html(buildActionBar({title: titleText, link: linkHref}))).insertAfter(shareAction);
+         $($('<a class="_5cix"></a>').html(buildActionBar({title: titleText, link: linkHref, rule: rule, action: 5}))).insertAfter(shareAction);
           addedAction = true;
         });
       }
 
       if (!addedAction) {
         containerNode.parent().parent('.UFICommentContent').parent().find('.UFICommentActions').each(function(idx, foo){
-	  $(foo).append(' · ', buildActionBar({title: titleText, link: linkHref}));
+	  $(foo).append(' · ', buildActionBar({title: titleText, link: linkHref, rule: rule, action: 6}));
           addedAction = true;
         });
       }
       if (!addedAction) {
         // this check sould be after UFICommentContent
         containerNode.parents('._5pax').find('._5pcp').each(function(idx, foo){
-	  $(foo).append(' · ', buildActionBar({title: titleText, link: linkHref}));
+	  $(foo).append(' · ', buildActionBar({title: titleText, link: linkHref, rule: rule, action: 7}));
           addedAction = true;
         });
       }
@@ -117,19 +116,19 @@ var censorFacebook = function(baseNode) {
       // 再來是single post
       if (!addedAction) {
         containerNode.parent('div[role="article"]').find('.uiCommentContainer .UIActionLinks').each(function(idx, uiStreamSource){
-          $(uiStreamSource).append(' · ').append(buildActionBar({title: titleText, link: linkHref}));
+          $(uiStreamSource).append(' · ').append(buildActionBar({title: titleText, link: linkHref, rule: rule, action: 8}));
           addedAction = true;
         });
       }
 
       if (!addedAction) {
         containerNode.siblings().find('.uiCommentContainer').find('.UIActionLinks').each(function(idx, foo){
-	  $(foo).append(' · ', buildActionBar({title: titleText, link: linkHref}));
+	  $(foo).append(' · ', buildActionBar({title: titleText, link: linkHref, rule: rule, action: 9}));
           addedAction = true;
         });
       }
 
-      if (DEBUG_ && !addedAction) console.log('fail to insert actionbar');
+      if (DEBUG_ && !addedAction) console.log('fail to insert actionbar ' + rule);
 
       /* log the link first */
       chrome.extension.sendRequest({method: 'log_browsed_link', title: titleText, link: linkHref}, function(response){});
@@ -152,7 +151,7 @@ var censorFacebook = function(baseNode) {
       uiStreamAttachment = $(uiStreamAttachment);
       var titleText = uiStreamAttachment.find(".uiAttachmentTitle").text();
       var linkHref = uiStreamAttachment.find("a").attr("href");
-      censorFacebookNode(uiStreamAttachment, titleText, linkHref);
+      censorFacebookNode(uiStreamAttachment, titleText, linkHref, 'rule1');
     });
 
     $(baseNode)
@@ -162,7 +161,7 @@ var censorFacebook = function(baseNode) {
       userContent = $(userContent);
       var titleText = userContent.find(".fwb").text();
       var linkHref = userContent.find("a").attr("href");
-      censorFacebookNode(userContent, titleText, linkHref);
+      censorFacebookNode(userContent, titleText, linkHref, 'rule2');
     });
 
     $(baseNode)
@@ -172,7 +171,7 @@ var censorFacebook = function(baseNode) {
       userContent = $(userContent);
       var titleText = userContent.find(".fwb").text();
       var linkHref = userContent.find("a").attr("href");
-      censorFacebookNode(userContent, titleText, linkHref);
+      censorFacebookNode(userContent, titleText, linkHref, 'rule3');
     });
 
     /* others' timeline, fan page */
@@ -183,7 +182,7 @@ var censorFacebook = function(baseNode) {
       shareUnit = $(shareUnit);
       var titleText = shareUnit.find(".fwb").text();
       var linkHref = shareUnit.find("a").attr("href");
-      censorFacebookNode(shareUnit, titleText, linkHref);
+      censorFacebookNode(shareUnit, titleText, linkHref, 'rule4');
     });
 
     $(baseNode)
@@ -193,7 +192,7 @@ var censorFacebook = function(baseNode) {
       userContent = $(userContent);
       var titleText = userContent.find(".fwb").text();
       var linkHref = userContent.find("a").attr("href");
-      censorFacebookNode(userContent, titleText, linkHref);
+      censorFacebookNode(userContent, titleText, linkHref, 'rule5');
     });
 
     /* post page (single post) */
@@ -204,7 +203,7 @@ var censorFacebook = function(baseNode) {
       userContent = $(userContent);
       var titleText = userContent.find(".mbs").text();
       var linkHref = userContent.find("a").attr("href");
-      censorFacebookNode(userContent, titleText, linkHref);
+      censorFacebookNode(userContent, titleText, linkHref, 'rule6');
     });
   }
 
@@ -257,6 +256,14 @@ var buildActionBar = function(options) {
   var url = 'http://newshelper.g0v.tw';
   if ('undefined' !== typeof(options.title) && 'undefined' !== typeof(options.link)) {
     url += '?news_link=' + encodeURIComponent(options.link) + '&news_title= ' + encodeURIComponent(options.title);
+  }
+  if (DEBUG_) {
+      if ('undefined' !== typeof(options.rule)) {
+        url += '&rule=' + encodeURIComponent(options.rule);
+      }
+      if ('undefined' !== typeof(options.action)) {
+        url += '&action=' + encodeURIComponent(options.action);
+      }
   }
   return '<a href="' + url + '" target="_blank">回報給新聞小幫手</a>';
 };
