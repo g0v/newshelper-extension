@@ -100,7 +100,7 @@ var censorFacebook = function(baseNode) {
       }
 
       if (!addedAction) {
-        containerNode.parent().parent('.UFICommentContent').parent().find('.UFICommentActions').each(function(idx, foo){
+        containerNode.parents('.UFICommentContentBlock').find('.UFICommentActions').each(function(idx, foo){
 	  $(foo).append(' · ', buildActionBar({title: titleText, link: linkHref, rule: rule, action: 6}));
           addedAction = true;
         });
@@ -124,6 +124,13 @@ var censorFacebook = function(baseNode) {
       if (!addedAction) {
         containerNode.siblings().find('.uiCommentContainer').find('.UIActionLinks').each(function(idx, foo){
 	  $(foo).append(' · ', buildActionBar({title: titleText, link: linkHref, rule: rule, action: 9}));
+          addedAction = true;
+        });
+      }
+
+      if (!addedAction) {
+        containerNode.parents('.userContentWrapper').find('._5vsi div').each(function(idx, foo){
+	  $(foo).append(' · ', buildActionBar({title: titleText, link: linkHref, rule: rule, action: 10}));
           addedAction = true;
         });
       }
@@ -164,6 +171,7 @@ var censorFacebook = function(baseNode) {
       censorFacebookNode(userContent, titleText, linkHref, 'rule2');
     });
 
+    /* 這個規則會讓按讚也被誤判是連結
     $(baseNode)
     .find("._42ef")
     .not(".newshelper-checked")
@@ -172,7 +180,7 @@ var censorFacebook = function(baseNode) {
       var titleText = userContent.find(".fwb").text();
       var linkHref = userContent.find("a").attr("href");
       censorFacebookNode(userContent, titleText, linkHref, 'rule3');
-    });
+    });*/
 
     /* others' timeline, fan page */
     $(baseNode)
@@ -204,6 +212,17 @@ var censorFacebook = function(baseNode) {
       var titleText = userContent.find(".mbs").text();
       var linkHref = userContent.find("a").attr("href");
       censorFacebookNode(userContent, titleText, linkHref, 'rule6');
+    });
+
+    /* post page (single post) */
+    $(baseNode)
+    .find("._6m3")
+    .not(".newshelper-checked")
+    .each(function(idx, userContent) {
+      userContent = $(userContent);
+      var titleText = userContent.find("a").text();
+      var linkHref = userContent.find("a").attr("href");
+      censorFacebookNode(userContent.parents('._2r3x').find('._6m3').parent(), titleText, linkHref, 'rule7');
     });
   }
 
