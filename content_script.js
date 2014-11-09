@@ -19,7 +19,7 @@ var check_report = function(title, url, cb){
 
 var buildWarningMessage = function(options){
   return '<div class="newshelper-warning-facebook">' +
-    '<div class="arrow-up"></div>' +
+    '<div class="newshelper-arrow-up"></div>' +
     '注意！您可能是<b>問題新聞</b>的受害者' +
     '<span class="newshelper-description">' +
     $('<span></span>').append($('<a></a>').attr({href: options.link, target: '_blank'}).text(options.title)).html() +
