@@ -18,7 +18,7 @@
       -moz-border-radius: 5px;
            border-radius: 5px;
 }
- 
+
 .newshelper-description {
   display: block;
   font-size: small;
@@ -32,9 +32,9 @@
   background: transparent url(data:image/gif;base64,R0lGODlhEQDcAKIAAP////8AAGYAmQAzZv///wAAAAAAAAAAACH5BAUUAAQALAAAAAARANwAAAPmSLrc/m7IOeEAON/x9gQXGGVa1XgSyRGSEpLa0qIUSH1w7HL0t7asnI7RS62IQsxRdrtBntCodEqtWq/YrHbL7Xq/4LB4TC6bz+i0es1uu9/wuHxOr9vv+Lx+zxcL/oCAEAI5hAIPhoAAhIsOjCSBjouKGYcEfwqPhQuYiYGen0mNmYegipaYl6KWDKZ/o62rjp+ffba3uLm6u7y9vr/AwcLDxMXGx8jJynIBzc7OEAE50gEP1M4A0tkO2iTP3NnYGdUEzQrd0wvm18/s7aLk5dXu2OTm5fDg7c3bDegw8dTt+7ZsSgIAOw==) no-repeat 100% -200px;
 }
 
-.arrow-up {
-  width: 0; 
-  height: 0; 
+.newshelper-arrow-up {
+  width: 0;
+  height: 0;
   border-left: 15px solid transparent;
   border-right: 15px solid transparent;
   border-bottom: 15px solid hsl(50, 100%, 70%);
