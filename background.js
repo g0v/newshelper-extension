@@ -245,11 +245,7 @@ var get_time_diff = function(time){
 
 // show notification
 var add_notification = function(title, body, link){
-  var notification = window.webkitNotifications.createNotification(
-    'newshelper48x48.png',
-    '' + title,
-    '' + body
-  );
+  var notification = new Notification('' + title, { icon: "newshelper48x48.png", body: '' + body });
   notification.onclick = function(){
     window.open(link);
   };
