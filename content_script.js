@@ -222,7 +222,7 @@ var censorFacebook = function(baseNode) {
       userContent = $(userContent);
       var titleText = userContent.find("a").text();
       var linkHref = userContent.find("a").attr("href");
-      censorFacebookNode(userContent.parents('._2r3x').find('._6m3').parent(), titleText, linkHref, 'rule7');
+      censorFacebookNode(userContent.parents('._2r3x').find('._6m3').parents('._6m2').parent(), titleText, linkHref, 'rule7');
     });
   }
 
