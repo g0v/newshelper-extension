@@ -250,4 +250,8 @@ var add_notification = function(title, body, link){
     window.open(link);
   };
   notification.show();
+
+  setTimeout(function(){
+    notification.cancel();
+  }, 10000);
 }
