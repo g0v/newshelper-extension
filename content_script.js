@@ -129,7 +129,7 @@ var censorFacebook = function(baseNode) {
       }
 
       if (!addedAction) {
-        containerNode.parents('.userContentWrapper').find('._5vsi div').each(function(idx, foo){
+        containerNode.parents('.userContentWrapper').find('._5vsi > div').each(function(idx, foo){
 	  $(foo).append(' · ', buildActionBar({title: titleText, link: linkHref, rule: rule, action: 10}));
           addedAction = true;
         });
