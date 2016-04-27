@@ -41,14 +41,16 @@ function onRequest(request, sender, sendResponse) {
 // Listen for the content script to send a message to the background page.
 chrome.extension.onRequest.addListener(onRequest);
 
-
+var next_fetch_at = 0;
 // sync db from api server
 var sync_db = function(force_notification){
   get_newshelper_db(function(opened_db){
     get_recent_report(function(latest_report){
-      $.get('http://d3n4xylkjv5pnb.cloudfront.net/index/data?time=' + (latest_report ? parseInt(latest_report.updated_at) : 0), function(ret){
+      var version_time = Math.max(next_fetch_at, (latest_report ? parseInt(latest_report.updated_at) : 0));
+      $.get('http://d3n4xylkjv5pnb.cloudfront.net/index/data?time=' + version_time, function(ret){
         var transaction = opened_db.transaction("report", 'readwrite');
         var objectStore = transaction.objectStore("report");
+        next_fetch_at = ret.time;
         if (ret.data) {
           for (var i = 0; i < ret.data.length; i ++) {
             objectStore.put(ret.data[i]);
