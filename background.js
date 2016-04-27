@@ -46,7 +46,7 @@ chrome.extension.onRequest.addListener(onRequest);
 var sync_db = function(force_notification){
   get_newshelper_db(function(opened_db){
     get_recent_report(function(latest_report){
-      $.get('http://newshelper.g0v.tw/index/data?time=' + (latest_report ? parseInt(latest_report.updated_at) : 0), function(ret){
+      $.get('http://d3n4xylkjv5pnb.cloudfront.net/index/data?time=' + (latest_report ? parseInt(latest_report.updated_at) : 0), function(ret){
         var transaction = opened_db.transaction("report", 'readwrite');
         var objectStore = transaction.objectStore("report");
         if (ret.data) {
