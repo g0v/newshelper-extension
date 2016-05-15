@@ -8,30 +8,30 @@ function onRequest(request, sender, sendResponse) {
     }
 
     if (request.method == 'add_notification') {
-	add_notification(request.title, request.body, request.link);
+        add_notification(request.title, request.body, request.link);
     }
 
     if (request.method == 'start_sync_db') {
-	if (last_sync_at < 0) {
-	    last_sync_at = 0;
-	    setInterval(function(){
-		if ((new Date()).getTime() - last_sync_at < 300 * 1000) {
-		    return;
-		}
-		last_sync_at = (new Date()).getTime();
+        if (last_sync_at < 0) {
+            last_sync_at = 0;
+            setInterval(function(){
+                if ((new Date()).getTime() - last_sync_at < 300 * 1000) {
+                    return;
+                }
+                last_sync_at = (new Date()).getTime();
 
-		sync_db(false);
-	    }, 10000);
-	}
+                sync_db(false);
+            }, 10000);
+        }
     }
 
     if (request.method == 'log_browsed_link') {
-	log_browsed_link(request.link, request.title);
+        log_browsed_link(request.link, request.title);
     }
 
     if (request.method == 'check_report') {
-	check_report(request.title, request.url, sendResponse);
-	return;
+        check_report(request.title, request.url, sendResponse);
+        return;
     }
 
     // Return nothing to let the connection be cleaned up.
@@ -61,7 +61,7 @@ var sync_db = function(force_notification){
               if (parseInt(ret.data[i].created_at, 10) > parseInt(latest_report.updated_at, 10)) {
                 check_recent_seen(ret.data[i]);
               }
-	    }
+            }
           }
         }
       }, 'json');
@@ -182,8 +182,8 @@ var check_recent_seen = function(report){
 
       // 如果已經被刪除了就跳過
       add_notification(
-	'新聞小幫手提醒您',
-	'您於' + get_time_diff(get_request.result.last_seen_at) + ' 看的新聞「' + (get_request.result.title?get_request.result.title:report.news_title) + '」 被人回報有錯誤：' + report.report_title,
+        '新聞小幫手提醒您',
+        '您於' + get_time_diff(get_request.result.last_seen_at) + ' 看的新聞「' + (get_request.result.title?get_request.result.title:report.news_title) + '」 被人回報有錯誤：' + report.report_title,
         report.report_link
       );
     };
@@ -222,7 +222,7 @@ var check_report = function(title, url, cb){
           if (get_request.result && !parseInt(get_request.result.deleted_at, 10)) {
             return cb(get_request.result);
           }
-	  check_url(url, cb);
+          check_url(url, cb);
         };
       } else {
         check_url(url, cb);
