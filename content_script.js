@@ -2,7 +2,8 @@ var DEBUG_ = false;
 
 // 叫 background 開始跟 api server 同步資料
 var sync_report_data = function(){
-    chrome.extension.sendRequest({method: 'start_sync_db'}, function(response){});
+    chrome.runtime.sendMessage({method: 'start_sync_db'})
+      .then(function(response){});
 };
 
 // 從 db 中判斷 title, url 是否是錯誤新聞，是的話執行 cb 並傳入資訊
@@ -10,11 +11,22 @@ var check_report = function(title, url, cb){
   if (!url) {
     return;
   }
-  chrome.extension.sendRequest({method: 'check_report', title: title, url: url}, function(ret){
-      if (ret !== false && ret) {
-	  cb(ret);
-      }
-  });
+
+  function handleResponse(ret) {
+    if (ret !== false && ret) {
+      cb(ret);
+    }
+  }
+
+  function handleError(error) {
+    console.log(`Error: ${error}`);
+  }
+
+  chrome.runtime.sendMessage({
+    method: 'check_report',
+    title: title,
+    url: url
+  }).then(handleResponse, handleError);
 }
 
 var buildWarningMessage = function(options){
@@ -138,7 +150,11 @@ var censorFacebook = function(baseNode) {
       if (DEBUG_ && !addedAction) console.log('fail to insert actionbar ' + rule);
 
       /* log the link first */
-      chrome.extension.sendRequest({method: 'log_browsed_link', title: titleText, link: linkHref}, function(response){});
+      chrome.runtime.sendMessage({
+        method: 'log_browsed_link',
+        title: titleText,
+        link: linkHref
+      }).then(function(response){});
 
       check_report(titleText, linkHref, function(report){
         containerNode.addClass(className);
@@ -254,7 +270,8 @@ var registerObserver = function() {
   };
 
   var mutationObserver = new MutationObserver(function(mutations) {
-    chrome.extension.sendRequest({method: 'page'}, function(response){});
+    chrome.runtime.sendMessage({method: 'page'})
+      .then(function(response){});
 
     var hasNewNode = false;
     mutations.forEach(function(mutation, idx) {
@@ -298,14 +315,15 @@ var main = function() {
     }
   } else {
      check_report('', document.location.href, function(report){
-	 chrome.extension.sendRequest({method: 'page'}, function(response){});
+	 chrome.runtime.sendMessage({method: 'page'})
+     .then(function(response){});
 	 document.body.style.border = "5px solid red";
-	 chrome.extension.sendRequest({
+	 chrome.runtime.sendMessage({
 	   method: 'add_notification',
 	   title: '注意，您可能是問題新聞的受害者',
 	   body: report.report_title,
 	   link: report.report_link
-	 }, function(response){});
+	 }).then(function(response){});
      });
   }
 
