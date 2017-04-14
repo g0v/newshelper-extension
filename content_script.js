@@ -38,9 +38,13 @@ var censorFacebook = function(baseNode) {
     /* add warning message to a Facebook post if necessary */
     var censorFacebookNode = function(containerNode, titleText, linkHref, rule) {
       if (DEBUG_) console.log('censorFacebookNode', containerNode[0], titleText);
-      var matches = ('' + linkHref).match('^http://(l|www)\.facebook\.com/l\.php\\?u=([^&]*)');
-      if (matches) {
-        linkHref = decodeURIComponent(matches[2]);
+      while (true) {
+          var matches = ('' + linkHref).match('^https?://(l|www)\.facebook\.com/l\.php\\?u=([^&]*)');
+	  if (matches) {
+	      linkHref = decodeURIComponent(matches[2]);
+              continue;
+	  }
+          break;
       }
       // 處理 被加上 ?fb_action_ids=xxxxx 的情況
       matches = ('' + linkHref).match('(.*)[?&]fb_action_ids=.*');
