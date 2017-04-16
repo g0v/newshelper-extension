@@ -13,6 +13,9 @@ Backend
 -------
 新聞小幫手需要從 [後端伺服器](https://github.com/g0v/newshelper-backend) 更新資料庫。但新聞小幫手的所有判斷動作都是在您的瀏覽器內完成的，因此您不用擔心因此而造成您的上網隱私外洩。
 
+Development
+-------
+開發時可以至 https://www.facebook.com/新聞小幫手測試專用-494676360619618 測試本套件。
 
 License
 -------
