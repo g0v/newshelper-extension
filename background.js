@@ -2,40 +2,40 @@ var seen_link = {};
 var last_sync_at = -1;
 
 function onRequest(request, sender, sendResponse) {
-    if (request.method == 'page') {
-        // 顯示設定新聞小幫手的 page action
-        chrome.pageAction.show(sender.tab.id);
+  if (request.method == 'page') {
+    // 顯示設定新聞小幫手的 page action
+    chrome.pageAction.show(sender.tab.id);
+  }
+
+  if (request.method == 'add_notification') {
+    add_notification(request.title, request.body, request.link);
+  }
+
+  if (request.method == 'start_sync_db') {
+    if (last_sync_at < 0) {
+      last_sync_at = 0;
+      setInterval(function(){
+        if ((new Date()).getTime() - last_sync_at < 300 * 1000) {
+          return;
+        }
+        last_sync_at = (new Date()).getTime();
+
+        sync_db(false);
+      }, 10000);
     }
+  }
 
-    if (request.method == 'add_notification') {
-	add_notification(request.title, request.body, request.link);
-    }
+  if (request.method == 'log_browsed_link') {
+    log_browsed_link(request.link, request.title);
+  }
 
-    if (request.method == 'start_sync_db') {
-	if (last_sync_at < 0) {
-	    last_sync_at = 0;
-	    setInterval(function(){
-		if ((new Date()).getTime() - last_sync_at < 300 * 1000) {
-		    return;
-		}
-		last_sync_at = (new Date()).getTime();
+  if (request.method == 'check_report') {
+    check_report(request.title, request.url, sendResponse);
+    return;
+  }
 
-		sync_db(false);
-	    }, 10000);
-	}
-    }
-
-    if (request.method == 'log_browsed_link') {
-	log_browsed_link(request.link, request.title);
-    }
-
-    if (request.method == 'check_report') {
-	check_report(request.title, request.url, sendResponse);
-	return;
-    }
-
-    // Return nothing to let the connection be cleaned up.
-    sendResponse({});
+  // Return nothing to let the connection be cleaned up.
+  sendResponse({});
 };
 
 // Listen for the content script to send a message to the background page.
@@ -61,7 +61,7 @@ var sync_db = function(force_notification){
               if (parseInt(ret.data[i].created_at, 10) > parseInt(latest_report.updated_at, 10)) {
                 check_recent_seen(ret.data[i]);
               }
-	    }
+            }
           }
         }
       }, 'json');
@@ -91,7 +91,8 @@ var get_newshelper_db = function(cb){
   request.onupgradeneeded = function(event){
     try {
       event.currentTarget.result.deleteObjectStore('report');
-    } catch (e) {}
+    }
+    catch (e) {}
     var objectStore = event.currentTarget.result.createObjectStore("report", { keyPath: "id" });
     objectStore.createIndex("news_title", "news_title", { unique: false });
     objectStore.createIndex("news_link", "news_link", { unique: false });
@@ -103,7 +104,8 @@ var get_newshelper_db = function(cb){
       objectStore.createIndex("title", "title", { unique: false });
       objectStore.createIndex("link", "link", { unique: true });
       objectStore.createIndex("last_seen_at", "last_seen_at", { unique: false });
-    } catch (e) {}
+    }
+    catch (e) {}
   };
 };
 
@@ -168,7 +170,7 @@ var log_browsed_link = function(link, title) {
 // check recent seen news with report
 var check_recent_seen = function(report){
   if (parseInt(report.deleted_at, 10)) {
-      return;
+    return;
   }
   get_newshelper_db(function(opened_db){
     var transaction = opened_db.transaction("read_news", 'readonly');
@@ -182,8 +184,8 @@ var check_recent_seen = function(report){
 
       // 如果已經被刪除了就跳過
       add_notification(
-	'新聞小幫手提醒您',
-	'您於' + get_time_diff(get_request.result.last_seen_at) + ' 看的新聞「' + (get_request.result.title?get_request.result.title:report.news_title) + '」 被人回報有錯誤：' + report.report_title,
+        '新聞小幫手提醒您',
+        '您於' + get_time_diff(get_request.result.last_seen_at) + ' 看的新聞「' + (get_request.result.title?get_request.result.title:report.news_title) + '」 被人回報有錯誤：' + report.report_title,
         report.report_link
       );
     };
@@ -220,11 +222,12 @@ var check_report = function(title, url, cb){
         get_request.onsuccess = function(){
           // 如果有找到結果，並且沒有被刪除
           if (get_request.result && !parseInt(get_request.result.deleted_at, 10)) {
-            return cb(get_request.result);
+          return cb(get_request.result);
           }
-	  check_url(url, cb);
+          check_url(url, cb);
         };
-      } else {
+      }
+      else {
         check_url(url, cb);
       }
     });
@@ -236,11 +239,14 @@ var get_time_diff = function(time){
   var delta = Math.floor((new Date()).getTime() / 1000) - time;
   if (delta < 60) {
     return delta + " 秒前";
-  } else if (delta < 60 * 60) {
+  }
+  else if (delta < 60 * 60) {
     return Math.floor(delta / 60) + " 分鐘前";
-  } else if (delta < 60 * 60 * 24) {
+  }
+  else if (delta < 60 * 60 * 24) {
     return Math.floor(delta / 60 / 60) + " 小時前";
-  } else {
+  }
+  else {
     return Math.floor(delta / 60 / 60 / 24) + " 天前";
   }
 };
