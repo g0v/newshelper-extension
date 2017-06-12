@@ -253,9 +253,17 @@ var get_time_diff = function(time){
 
 // show notification
 var add_notification = function(title, body, link){
-  var notification = new Notification('' + title, { icon: "newshelper48x48.png", body: '' + body });
+
+  if(!window.Notification) return;
+
+  var notification = new Notification(title, { icon: "newshelper48x48.png", body: body });
+
   notification.onclick = function(){
     window.open(link);
   };
-  notification.show();
+
+  setTimeout(function(){
+    notification.close();
+  }, 5000);
+
 }
