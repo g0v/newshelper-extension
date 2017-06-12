@@ -75,14 +75,14 @@ var censorFacebook = function(baseNode) {
 
       // 先看看是不是 uiStreamActionFooter, 表示是同一個新聞有多人分享, 那只要最上面加上就好了
       var addedAction = false;
-      containerNode.parent('div[role=article]').find('.uiStreamActionFooter').each(function(idx, uiStreamSource) {
+      containerNode.parents('div[role=article]').find('.uiStreamActionFooter').each(function(idx, uiStreamSource) {
         $(uiStreamSource).find('li:first').append(' · ' + buildActionBar({title: titleText, link: linkHref, rule: rule, action: 1}));
         addedAction = true;
       });
 
       // 再看看單一動態，要加在 .uiStreamSource
       if (!addedAction) {
-        containerNode.parent('div[role=article]').find('.uiStreamSource').each(function(idx, uiStreamSource) {
+        containerNode.parents('div[role=article]').find('.uiStreamSource').each(function(idx, uiStreamSource) {
           $($('<span></span>').html(buildActionBar({title: titleText, link: linkHref, rule: rule, action: 2}) + ' · ')).insertBefore(uiStreamSource);
 
           addedAction = true;
@@ -93,7 +93,7 @@ var censorFacebook = function(baseNode) {
 
       // 再來有可能是有人說某個連結讚
       if (!addedAction) {
-        containerNode.parent('div.storyInnerContent').find('.uiStreamSource').each(function(idx, uiStreamSource){
+        containerNode.parents('div.storyInnerContent').find('.uiStreamSource').each(function(idx, uiStreamSource){
           $($('<span></span>').html(buildActionBar({title: titleText, link: linkHref, rule: rule, action: 3}) + ' · ')).insertBefore(uiStreamSource);
           addedAction = true;
         });
@@ -101,7 +101,7 @@ var censorFacebook = function(baseNode) {
 
       // 再來是個人頁面
       if (!addedAction) {
-        containerNode.parent('div[role="article"]').siblings('.uiCommentContainer').find('.UIActionLinks').each(function(idx, uiStreamSource){
+        containerNode.parents('div[role="article"]').siblings('.uiCommentContainer').find('.UIActionLinks').each(function(idx, uiStreamSource){
           $(uiStreamSource).append(' · ').append(buildActionBar({title: titleText, link: linkHref, rule: rule, action: 4}));
           addedAction = true;
         });
@@ -109,7 +109,7 @@ var censorFacebook = function(baseNode) {
 
       // 新版Timeline
       if (!addedAction) {
-        containerNode.parent('._4q_').find('._6p-').find('._5ciy').find('._6j_').each(function(idx, shareAction){
+        containerNode.parents('._4q_').find('._6p-').find('._5ciy').find('._6j_').each(function(idx, shareAction){
           $($('<a class="_5cix"></a>').html(buildActionBar({title: titleText, link: linkHref, rule: rule, action: 5}))).insertAfter(shareAction);
           addedAction = true;
         });
@@ -131,7 +131,7 @@ var censorFacebook = function(baseNode) {
 
       // 再來是single post
       if (!addedAction) {
-        containerNode.parent('div[role="article"]').find('.uiCommentContainer .UIActionLinks').each(function(idx, uiStreamSource){
+        containerNode.parents('div[role="article"]').find('._5pcp._5lel').each(function(idx, uiStreamSource){
           $(uiStreamSource).append(' · ').append(buildActionBar({title: titleText, link: linkHref, rule: rule, action: 8}));
           addedAction = true;
         });
