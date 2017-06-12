@@ -39,7 +39,7 @@ function onRequest(request, sender, sendResponse) {
 };
 
 // Listen for the content script to send a message to the background page.
-chrome.extension.onRequest.addListener(onRequest);
+chrome.runtime.onMessage.addListener(onRequest);
 
 var next_fetch_at = 0;
 // sync db from api server
