@@ -19,7 +19,7 @@ var check_report = function(title, url, cb){
   }
 
   function handleError(error) {
-    console.log(`Error: ${error}`);
+    console.error(`Error: ${error}`);
   }
 
   chrome.runtime.sendMessage({

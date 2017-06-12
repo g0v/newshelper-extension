@@ -31,7 +31,7 @@ function onRequest(request, sender, sendResponse) {
 
   if (request.method == 'check_report') {
     check_report(request.title, request.url, sendResponse);
-    return;
+    return true;
   }
 
   // Return nothing to let the connection be cleaned up.
@@ -222,7 +222,7 @@ var check_report = function(title, url, cb){
         get_request.onsuccess = function(){
           // 如果有找到結果，並且沒有被刪除
           if (get_request.result && !parseInt(get_request.result.deleted_at, 10)) {
-          return cb(get_request.result);
+            return cb(get_request.result);
           }
           check_url(url, cb);
         };
