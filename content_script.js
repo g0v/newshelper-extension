@@ -122,7 +122,7 @@ var censorFacebook = function(baseNode) {
         });
       }
       if (!addedAction) {
-        // this check sould be after UFICommentContent
+        // this check should be after UFICommentContent
         containerNode.parents('._5pax').find('._5pcp').each(function(idx, foo){
           $(foo).append(' · ', buildActionBar({title: titleText, link: linkHref, rule: rule, action: 7}));
           addedAction = true;
