@@ -32,7 +32,7 @@ var check_report = function(title, url, cb){
 var buildWarningMessage = function(options){
   return '<div class="newshelper-warning-facebook">' +
     '<div class="newshelper-arrow-up"></div>' +
-    '注意！您可能是<b>問題新聞</b>的受害者' +
+    chrome.i18n.getMessage('warning') +
     '<span class="newshelper-description">' +
     $('<span></span>').append($('<a></a>').attr({href: options.link, target: '_blank'}).text(options.title)).html() +
     '</span>' +
@@ -305,7 +305,7 @@ var buildActionBar = function(options) {
       url += '&action=' + encodeURIComponent(options.action);
     }
   }
-  return '<a href="' + url + '" target="_blank">回報給新聞小幫手</a>';
+  return `<a href="${url}" target="_blank">${chrome.i18n.getMessage('reportCTA')}</a>`;
 };
 
 var main = function() {
@@ -326,7 +326,7 @@ var main = function() {
       document.body.style.border = "5px solid red";
       chrome.runtime.sendMessage({
         method: 'add_notification',
-        title: '注意，您可能是問題新聞的受害者',
+        title: chrome.i18n.getMessage("warning").replace(/<\/?b>/g, ''),
         body: report.report_title,
         link: report.report_link
       }).then(function(response){});

@@ -1,0 +1,40 @@
+{
+  "extensionName": {
+    "message": "新聞小幫手",
+    "description": "Name of the extension."
+  },
+  "extensionDescription": {
+    "message": "揪出問題新聞、守護您的網路閱聽品質",
+    "description": "Description of the extension."
+  },
+  "extensionPageActionTitle": {
+    "message": "設定新聞小幫手",
+    "description": "Title of pageAction button"
+  },
+
+  "secondAgo": {
+    "message": " 秒前",
+    "description": "before how many seconds"
+  },
+  "minuteAgo": {
+    "message": " 分鐘前",
+    "description": "before how many minutes"
+  },
+  "hourAgo": {
+    "message": " 小時前",
+    "description": "before how many hours"
+  },
+  "dayAgo": {
+    "message": " 天前",
+    "description": "before how many days"
+  },
+
+  "warning": {
+    "message": "注意！您可能是<b>問題新聞</b>的受害者",
+    "description": "tell user he/she is reading false news."
+  },
+  "reportCTA": {
+    "message": "回報給新聞小幫手",
+    "description": "button text for reporting"
+  }
+}
