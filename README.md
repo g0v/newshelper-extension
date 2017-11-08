@@ -6,7 +6,7 @@
 Download
 --------
 * [Chrome 瀏覽器擴充元件](https://chrome.google.com/webstore/detail/%E6%96%B0%E8%81%9E%E5%B0%8F%E5%B9%AB%E6%89%8B/hkenpfplphndcndhhhldecaammpmopoc)
-* [Firefox 瀏覽器擴充元件](https://addons.mozilla.org/zh-TW/firefox/addon/newshelper-firefox/)
+* [Firefox 瀏覽器擴充元件](https://addons.mozilla.org/zh-TW/firefox/addon/newshelper/)
 
 
 Backend
