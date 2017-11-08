@@ -22,10 +22,10 @@
     "https://*/*"
   ],
 
-  "background": { "scripts": ["jquery-3.2.1.min.js", "libs/url-normalizer.js/url-normalizer.js", "background.js"] },
+  "background": { "scripts": ["vendor/jquery-3.2.1.min.js", "libs/url-normalizer.js/url-normalizer.js", "background.js"] },
 
   "page_action" : {
-      "default_icon" : "icon.png",
+      "default_icon" : "icons/icon.png",
       "default_title" : "__MSG_extensionPageActionTitle__",
       "default_popup" : "popup.html"
   },
@@ -68,8 +68,8 @@
   ],
 
   "icons" : {
-     "128" : "newshelper128x128.png",
-     "96" : "newshelper96x96.png",
-     "48" : "newshelper48x48.png"
+     "128" : "icons/newshelper128x128.png",
+     "96" : "icons/newshelper96x96.png",
+     "48" : "icons/newshelper48x48.png"
   }
 }
