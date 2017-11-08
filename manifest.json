@@ -10,7 +10,7 @@
 
   "name": "newshelper",
   "description": "協助您判別含有誤導資訊的新聞",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "author": "ronnywang@gmail.com, wildsky@moztw.org, racklin@gmail.com",
   "permissions": [
     "notifications",
