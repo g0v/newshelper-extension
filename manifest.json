@@ -42,7 +42,7 @@
         "https://*/*"
       ],
       "js": [
-        "jquery-3.2.1.min.js",
+        "vendor/jquery-3.2.1.min.js",
         "content_script.js"
       ],
       "css": [
