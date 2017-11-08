@@ -8,9 +8,9 @@
 
   "manifest_version": 2,
 
-  "name": "新聞小幫手",
+  "name": "newshelper",
   "description": "協助您判別含有誤導資訊的新聞",
-  "version": "1.0.8",
+  "version": "1.1.0",
   "author": "ronnywang@gmail.com, wildsky@moztw.org, racklin@gmail.com",
   "permissions": [
     "notifications",
