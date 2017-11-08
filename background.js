@@ -256,8 +256,7 @@ var add_notification = function(title, body, link){
 
   if(!window.Notification) return;
 
-  var notification = new Notification(title, { icon: "newshelper48x48.png", body: body });
-
+  var notification = new Notification('' + title, { icon: "newshelper48x48.png", body: '' + body });
   notification.onclick = function(){
     window.open(link);
   };

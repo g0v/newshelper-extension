@@ -1,10 +1,17 @@
 {
+  "applications": {
+    "gecko": {
+      "id": "newshelper@g0v.tw",
+      "strict_min_version": "51.0"
+    }
+  },
+
   "manifest_version": 2,
 
   "name": "新聞小幫手",
   "description": "協助您判別含有誤導資訊的新聞",
   "version": "1.0.8",
-
+  "author": "ronnywang@gmail.com, wildsky@moztw.org, racklin@gmail.com",
   "permissions": [
     "notifications",
     "http://newshelper.g0v.tw/*",
@@ -23,15 +30,15 @@
   },
 
   "web_accessible_resources" : [
-    "lib/url-normalizer.js/map.csv"
+    "libs/url-normalizer.js/map.csv"
   ],
   "content_scripts" : [
     {
       "matches": [
         "http://www.facebook.com/*",
         "https://www.facebook.com/*",
-	"http://*/*",
-	"https://*/*"
+        "http://*/*",
+        "https://*/*"
       ],
       "js": [
         "jquery-3.2.1.min.js",
@@ -44,6 +51,19 @@
       "all_frames" : false
     }
   ],
+
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/g0v/newshelper-extension.git"
+  },
+  "bugs": {
+    "url": "https://github.com/g0v/newshelper-extension/issues"
+  },
+  "keywords": [
+    "newshelper",
+    "g0v-tw"
+  ],
+
   "icons" : {
      "128" : "newshelper128x128.png",
      "96" : "newshelper96x96.png",
