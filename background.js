@@ -1,3 +1,5 @@
+/* global add_notification */
+
 var newshelper_bg = {
   opened_db: null,
   last_sync_at: -1,
@@ -52,21 +54,23 @@ var newshelper_bg = {
     }
 
     var request = indexedDB.open('newshelper', '8');
-    request.onsuccess = event => {
+    request.onsuccess = () => {
       me.opened_db = request.result;
       cb(me.opened_db);
       return;
     };
 
     request.onerror = event => {
-      console.log("IndexedDB error: " + event.target.errorCode);
+      console.error("IndexedDB error: " + event.target.errorCode);
     };
 
     request.onupgradeneeded = event => {
       try {
         event.currentTarget.result.deleteObjectStore('report');
       }
-      catch (e) {}
+      catch (e) {
+        console.error(e);
+      }
 
       var objectStore = event.currentTarget.result.createObjectStore("report", { keyPath: "id" });
       objectStore.createIndex("news_title", "news_title", { unique: false });
@@ -75,12 +79,14 @@ var newshelper_bg = {
       objectStore.createIndex("updated_at", "updated_at", { unique: false });
 
       try {
-        var objectStore = event.currentTarget.result.createObjectStore("read_news", { keyPath: "id", autoIncrement: true });
+        objectStore = event.currentTarget.result.createObjectStore("read_news", { keyPath: "id", autoIncrement: true });
         objectStore.createIndex("title", "title", { unique: false });
         objectStore.createIndex("link", "link", { unique: true });
         objectStore.createIndex("last_seen_at", "last_seen_at", { unique: false });
       }
-      catch (e) {}
+      catch (e) {
+        console.error(e);
+      }
     };
   },
 
@@ -216,15 +222,15 @@ var newshelper_bg = {
         var get_request = index.get(link);
         get_request.onsuccess = () => {
           if (!get_request.result) {
-            console.log('link=' + link + ' is not found in IndexedDB');
+            console.error('link=' + link + ' is not found in IndexedDB');
             return;
           }
           // update last_seen_at
-          var put_request = objectStore.put({
-            id: get_request.result.id,
-            title: title,
-            last_seen_at: Math.floor((new Date()).getTime() /1000)
-          });
+          // var put_request = objectStore.put({
+          //   id: get_request.result.id,
+          //   title: title,
+          //   last_seen_at: Math.floor((new Date()).getTime() /1000)
+          // });
         };
       };
     });
@@ -234,31 +240,30 @@ var newshelper_bg = {
     var me = newshelper_bg;
 
     switch (request.method) {
-      case 'page':
-        // show newshelper page action
-        chrome.pageAction.show(sender.tab.id);
-        break;
-      case 'add_notification':
-        me.add_notification(request.title, request.body, request.link);
-        break;
-      case 'start_sync_db':
-        if (me.last_sync_at < 0) {
-          me.last_sync_at = 0;
-          setInterval(() => {
-            if ((new Date()).getTime() - me.last_sync_at < 300 * 1000) return;
+    case 'page':
+      // show newshelper page action
+      chrome.pageAction.show(sender.tab.id);
+      break;
+    case 'add_notification':
+      me.add_notification(request.title, request.body, request.link);
+      break;
+    case 'start_sync_db':
+      if (me.last_sync_at < 0) {
+        me.last_sync_at = 0;
+        setInterval(() => {
+          if ((new Date()).getTime() - me.last_sync_at < 300 * 1000) return;
 
-            me.last_sync_at = (new Date()).getTime();
-            me.sync_db(false);
-          }, 10000);
-        }
-        break;
-      case 'log_browsed_link':
-        me.log_browsed_link(request.link, request.title);
-        break;
-      case 'check_report':
-        me.check_report(request.title, request.url, sendResponse);
-        return true;
-        break;
+          me.last_sync_at = (new Date()).getTime();
+          me.sync_db(false);
+        }, 10000);
+      }
+      break;
+    case 'log_browsed_link':
+      me.log_browsed_link(request.link, request.title);
+      break;
+    case 'check_report':
+      me.check_report(request.title, request.url, sendResponse);
+      return true;
     }
 
     // Return nothing to let the connection be cleaned up.
