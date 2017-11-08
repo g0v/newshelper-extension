@@ -30,16 +30,16 @@ var newshelper_bg = {
     // get time diff message
     var delta = Math.floor((new Date()).getTime() / 1000) - time;
     if (delta < 60) {
-      return delta + " 秒前";
+      return delta + chrome.i18n.getMessage("secondAgo");
     }
     else if (delta < 60 * 60) {
-      return Math.floor(delta / 60) + " 分鐘前";
+      return Math.floor(delta / 60) + chrome.i18n.getMessage("minuteAgo");
     }
     else if (delta < 60 * 60 * 24) {
-      return Math.floor(delta / 60 / 60) + " 小時前";
+      return Math.floor(delta / 60 / 60) + chrome.i18n.getMessage("hourAgo");
     }
     else {
-      return Math.floor(delta / 60 / 60 / 24) + " 天前";
+      return Math.floor(delta / 60 / 60 / 24) + chrome.i18n.getMessage("dayAgo");
     }
   },
 

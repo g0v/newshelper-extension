@@ -1,0 +1,40 @@
+{
+  "extensionName": {
+    "message": "Newshelper",
+    "description": "Name of the extension."
+  },
+  "extensionDescription": {
+    "message": "Safeguard news reading experience",
+    "description": "Description of the extension."
+  },
+  "extensionPageActionTitle": {
+    "message": "newshelper setting",
+    "description": "Title of pageAction button"
+  },
+
+  "secondAgo": {
+    "message": " s ago",
+    "description": "before how many seconds"
+  },
+  "minuteAgo": {
+    "message": " m ago",
+    "description": "before how many minutes"
+  },
+  "hourAgo": {
+    "message": " h ago",
+    "description": "before how many hours"
+  },
+  "dayAgo": {
+    "message": " d ago",
+    "description": "before how many days"
+  },
+
+  "warning": {
+    "message": "Caution: you could be a victim of <b>doubious news</b>",
+    "description": "tell user he/she is reading false news."
+  },
+  "reportCTA": {
+    "message": "Report to News Helper",
+    "description": "button text for reporting"
+  }
+}

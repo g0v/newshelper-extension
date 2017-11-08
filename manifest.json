@@ -8,10 +8,11 @@
 
   "manifest_version": 2,
 
-  "name": "newshelper",
-  "description": "協助您判別含有誤導資訊的新聞",
+  "default_locale": "en",
+  "name": "__MSG_extensionName__",
+  "description": "__MSG_extensionDescription__",
   "version": "1.2.0",
-  "author": "ronnywang@gmail.com, wildsky@moztw.org, racklin@gmail.com",
+  "author": "ronnywang, wildsky, racklin",
   "permissions": [
     "notifications",
     "http://newshelper.g0v.tw/*",
@@ -25,7 +26,7 @@
 
   "page_action" : {
       "default_icon" : "icon.png",
-      "default_title" : "設定新聞小幫手",
+      "default_title" : "__MSG_extensionPageActionTitle__",
       "default_popup" : "popup.html"
   },
 
