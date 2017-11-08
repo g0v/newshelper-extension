@@ -52,6 +52,8 @@
     }
   ],
 
+  "homepage_url": "https://addons.mozilla.org/zh-TW/firefox/addon/newshelper/",
+
   "repository": {
     "type": "git",
     "url": "git://github.com/g0v/newshelper-extension.git"
