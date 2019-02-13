@@ -97,6 +97,10 @@ var newshelper_bg = {
     me.get_newshelper_db( opened_db => {
       me.get_recent_report( latest_report => {
         var version_time = Math.max(me.next_fetch_at, (latest_report ? parseInt(latest_report.updated_at) : 0));
+        if (version_time) {
+            // facebook is disabled, only update one time
+            return;
+        }
         $.get('http://d3n4xylkjv5pnb.cloudfront.net/index/data?time=' + version_time, ret => {
           var transaction = opened_db.transaction("report", 'readwrite');
           var objectStore = transaction.objectStore("report");
