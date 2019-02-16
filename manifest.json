@@ -11,7 +11,7 @@
   "default_locale": "en",
   "name": "__MSG_extensionName__",
   "description": "__MSG_extensionDescription__",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "author": "ronnywang, wildsky, racklin",
   "permissions": [
     "notifications",
